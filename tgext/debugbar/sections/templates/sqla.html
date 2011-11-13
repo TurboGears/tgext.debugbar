@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      py:strip="">
+<h1>Queries Performed</h1>
+<table class="tgdb_table" style="width:90%;">
+	<thead>
+		<tr>
+            <th>Actions</th>
+			<th>Time&nbsp;(ms)</th>
+			<th>Query</th>
+			<th>Params</th>
+		</tr>
+	</thead>
+	<tbody>
+    <tr py:for="query in queries" class="tgdb_row">
+        <td>
+            <div py:if="query['is_select']" >
+                <a href="${tg.url('/_debugbar/perform_sql', params=dict(stmt=query['raw_sql'], params=query['params'], engine_id=query['engine_id'], duration=query['duration']))}"
+                   style="text-decoration: none;line-height:1.6em;">RESULTS</a>
+                <br/>
+                <a href="${tg.url('/_debugbar/explain_sql', params=dict(stmt=query['raw_sql'], params=query['params'], engine_id=query['engine_id'], duration=query['duration']))}"
+                   style="text-decoration: none;line-height:1.6em;">EXPLAIN</a>
+            </div>
+        </td>
+        <td>${'%.4f' % query['duration']}</td>
+        <td>${Markup(query['sql'])}</td>
+        <td>${Markup(query['params'])}</td>
+    </tr>
+	</tbody>
+</table>
+</html>

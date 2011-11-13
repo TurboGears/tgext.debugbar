@@ -1,0 +1,1 @@
+from initialize import enable_debugbar

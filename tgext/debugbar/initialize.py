@@ -34,8 +34,12 @@ def render_bars(response):
     if 'text/html' not in response['content_type'] or not isinstance(response['response'], unicode):
         return
 
+    resources = '''<link rel="stylesheet" type="text/css" href="/_debugbar/statics/style.css"></link>'''
     html = tg.render.render(dict(sections=__sections__), 'genshi', 'tgext.debugbar.templates.debugbar')
-    response['response'] = response['response'].replace(literal('</body>'), literal('%s</body>' % html))
+    response['response'] = response['response'].replace(literal('</head>'),
+                                                        literal('%s</head>' % resources))
+    response['response'] = response['response'].replace(literal('</body>'),
+                                                        literal('%s</body>' % html))
 
 def enable_debugbar(app_config):
     app_config.register_hook('startup', DebugBarSetupper(app_config))

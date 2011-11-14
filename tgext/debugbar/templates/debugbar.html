@@ -4,65 +4,13 @@
 
 <script type="text/javascript" src="/_debugbar/statics/jquery-1.7.min.js"></script>
 
-<?python
-    button_style = '''
-        z-index:999;
-        width:40px;
-        height:36px;
-        border-bottom-right-radius:15px;
-        position:fixed;
-        top:0;
-        left:0;
-        background-color:rgba(0, 0, 0, 0.6);
-        background-repeat:no-repeat;
-        background-image:url('/_debugbar/statics/TgGear.png');
-        cursor:pointer;'''.replace('\n', '')
-
-    bar_style = '''
-        width:100%;
-        height:24px;
-        top:0;
-        left:40px;
-        padding-left: 10px;
-        position:fixed;
-        background-color:rgba(0, 0, 0, 0.6);
-        color: lightgray;'''.replace('\n', '')
-
-    title_style = '''
-        font-size: 18px;
-        color: white;
-        font-weight: bold;
-        border-right: 1px solid #CCCCCC;
-        margin-right: 10px;
-        padding-right: 10px;
-        cursor: pointer;
-        height:24px;'''.replace('\n', '')
-
-    content_style = '''
-        z-index: 998;
-        color: black;
-        display: none;
-        width: 100%;
-        height: 600px;
-        overflow: auto;
-        position: fixed;
-        top: 24px;
-        padding-top: 20px;
-        background-color: #EEE;
-        opacity: 1.0;
-        box-shadow: 0px 20px 20px #444;
-        left: 0px;'''.replace('\n', '')
-
-    content_box_style = '''
-        margin: 10px;'''.replace('\n', '')
-?>
 <div id="tgdb_debugbar">
-    <div id="tgdb_button" style="${button_style}" onclick="jQuery('#tgdb_barcontent').slideToggle()"></div>
-    <div id="tgdb_barcontent" style="${bar_style}">
-        <div class="tgdb_section" style="float:left;" py:for="sect in sections" py:if="sect.is_active">
-            <div class="tgdb_title" style="${title_style}" onclick="jQuery('.tgdb_content').not(jQuery(this).siblings()).hide(); jQuery(this).siblings().slideToggle()">${sect.title()}</div>
-            <div class="tgdb_content" style="${content_style}">
-                <div class="tgdb_content_box" style="${content_box_style}">
+    <div id="tgdb_button" onclick="jQuery('#tgdb_barcontent').slideToggle()"></div>
+    <div id="tgdb_barcontent">
+        <div class="tgdb_section" py:for="sect in sections" py:if="sect.is_active">
+            <div class="tgdb_title" onclick="jQuery('.tgdb_content').not(jQuery(this).siblings()).hide(); jQuery(this).siblings().slideToggle()">${sect.title()}</div>
+            <div class="tgdb_content">
+                <div class="tgdb_content_box">
                     ${Markup(sect.content())}
                 </div>
             </div>
@@ -70,13 +18,4 @@
         <div style="clear:both"></div>
     </div>
 </div>
-<script>
-    jQuery('.tgdb_table .highlight pre').css('white-space', 'pre-wrap');
-    jQuery('.tgdb_table').css('background-color', 'white').css('border', '2px solid #CCC')
-    jQuery('.tgdb_table').css('max-width', '1024px').css('border-collapse', 'collapse');
-    jQuery('.tgdb_table th').css('font-size', '16px');
-    jQuery('.tgdb_table td, .tgdb_table th').css('padding', '4px');
-    jQuery('.tgdb_row').css('border-top', '2px solid #CCC');
-    jQuery('.tgdb_row_odd').css('background-color', '#FAFAFA');
-</script>
 </html>

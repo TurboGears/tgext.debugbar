@@ -30,6 +30,7 @@ setup(name='tgext.debugbar',
       zip_safe=False,
       install_requires=[
         "TurboGears2 >= 2.1.4",
+        "Pygments"
       ],
       entry_points="""
       # -*- Entry points: -*-

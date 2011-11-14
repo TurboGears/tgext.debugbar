@@ -14,6 +14,22 @@
     </tr>
 </table>
 
+<h1>Template</h1>
+<table class="tgdb_table">
+    <tr>
+        <th>Time</th>
+        <th>Engine</th>
+        <th>Template</th>
+        <th>Content Type</th>
+    </tr>
+    <tr class="tgdb_row tgdb_row_odd">
+        <td>${'%.4f' % vars['Render Time']}&nbsp;ms</td>
+        <td>${render_info.get('engine_name')}</td>
+        <td>${render_info.get('template_name')}</td>
+        <td>${render_info.get('content_type')}</td>
+    </tr>
+</table>
+
 <h1>Profiling</h1>
 <table class="tgdb_table">
     <thead>

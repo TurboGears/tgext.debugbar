@@ -18,15 +18,16 @@ class DebugBarSetupper():
         root = get_root_controller()
         root._debugbar = DebugBarController()
         for sec in __sections__:
+            if not sec.is_active:
+                continue
+
+            log.log(logging.DEBUG, 'Enabling Section: %s' % sec.name)
             for hook_name, hooks in sec.hooks.iteritems():
                 for hook in hooks:
                     if hook_name == 'startup':
                         hook()
                     else:
                         self.app_config.register_hook(hook_name, hook)
-
-        for sec in __sections__:
-            log.log(logging.DEBUG, 'Enabling Section: %s' % sec.name)
 
         self.app_config.register_hook('after_render', render_bars)
 

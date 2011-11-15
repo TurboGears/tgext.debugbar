@@ -56,7 +56,13 @@ except ImportError:
 
 class SQLADebugSection(DebugSection):
     name = 'SQLAlchemy'
-    is_active = has_sqla
+
+    @property
+    def is_active(self):
+        if not has_sqla:
+            return False
+
+        return tg.config.get('use_sqlalchemy', False)
 
     def title(self):
         return _('SQLAlchemy')

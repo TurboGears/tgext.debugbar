@@ -3,9 +3,25 @@ import sys, os, tg
 try:
     from pygments import highlight
     from pygments.formatters import HtmlFormatter
-    from pygments.lexers import SqlLexer
+    from pygments.lexers import SqlLexer, JavascriptLexer
+    from pygments.lexer import using, bygroups
+    from pygments.token import Punctuation, Other, Generic
     from pygments.styles import get_style_by_name
-    PYGMENT_STYLE = get_style_by_name('colorful')
+    SQL_STYLE = get_style_by_name('colorful')
+    JSON_STYLE = get_style_by_name('tango')
+
+    class InsideStringJavascriptLexer(JavascriptLexer):
+        def get_tokens_unprocessed(self, text, stack=('root',)):
+            text = text[1:-1]
+            text = text.replace('\\n', '\n')
+            return JavascriptLexer.get_tokens_unprocessed(self, text, stack)
+
+    mongo_tokens = {}
+    mongo_tokens.update(JavascriptLexer.tokens)
+    mongo_tokens['root'].insert(0, (r'"(function(\\\\|\\"|[^"])*)"', using(InsideStringJavascriptLexer)))
+    class MongoLexer(JavascriptLexer):
+        tokens = mongo_tokens
+
     HAVE_PYGMENTS = True
 except ImportError: # pragma: no cover
     HAVE_PYGMENTS = False
@@ -23,7 +39,16 @@ def format_sql(query):
     return highlight(
         query,
         SqlLexer(encoding='utf-8'),
-        HtmlFormatter(encoding='utf-8', noclasses=True, style=PYGMENT_STYLE))
+        HtmlFormatter(encoding='utf-8', noclasses=True, style=SQL_STYLE))
+
+def format_json(json):
+    if not HAVE_PYGMENTS: # pragma: no cover
+        return json
+
+    return highlight(
+        json,
+        MongoLexer(encoding='utf-8'),
+        HtmlFormatter(encoding='utf-8', noclasses=True, style=JSON_STYLE))
 
 def common_segment_count(path, value):
     """Return the number of path segments common to both"""

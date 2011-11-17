@@ -13,10 +13,8 @@ class DebugBarSetupper():
     def __call__(self):
         if not tg.config.get('debug', False):
             return
-        
+       
         log.log(logging.INFO, 'Enabling Debug Toolbar')
-        root = get_root_controller()
-        root._debugbar = DebugBarController()
         for sec in __sections__:
             if not sec.is_active:
                 continue
@@ -31,6 +29,11 @@ class DebugBarSetupper():
 
         self.app_config.register_hook('after_render', render_bars)
 
+def mount_debugbar_controller(app):
+    root = get_root_controller()
+    root._debugbar = DebugBarController()
+    return app
+
 def render_bars(response):
     if 'text/html' not in response['content_type'] or not isinstance(response['response'], unicode):
         return
@@ -44,3 +47,4 @@ def render_bars(response):
 
 def enable_debugbar(app_config):
     app_config.register_hook('startup', DebugBarSetupper(app_config))
+    app_config.register_hook('after_config', mount_debugbar_controller)

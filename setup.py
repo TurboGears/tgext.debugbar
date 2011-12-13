@@ -18,7 +18,7 @@ setup(name='tgext.debugbar',
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Framework :: TurboGears"
         ],
-      keywords='turbogears2.extension',
+      keywords='turbogears2.widgets',
       author='Alessandro Molina',
       author_email='alessandro.molina@axant.it',
       url='http://bitbucket.org/_amol_/tgext.debugbar',

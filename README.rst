@@ -16,7 +16,7 @@ Exposed sections are:
 Installing
 -------------------------------
 
-tgext.ajaxform can be installed both from pypi or from bitbucket::
+tgext.debugbar can be installed both from pypi or from bitbucket::
 
     easy_install tgext.debugbar
 

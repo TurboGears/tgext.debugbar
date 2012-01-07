@@ -7,15 +7,15 @@
 		<tr>
 			<th>Query</th>
 			<th>Params</th>
-			<th>Time&nbsp;(ms)</th>
+			<th>Time</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr py:for="query in queries" class="tgdb_row">
-			<td>${Markup(query['sql'])}</td>
-			<td>${Markup(query['params'])}</td>
-			<td>${'%.4f' % query['duration']}</td>
+			<td py:content="Markup(query['sql'])" />
+			<td py:content="Markup(query['params'])" />
+			<td py:content="u'%.4f\xa0ms' % query['duration']" />
 			<td>
 				<div py:if="query['is_select']">
 					<p class="tgdb_query">

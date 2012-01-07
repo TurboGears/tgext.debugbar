@@ -8,9 +8,10 @@
 		<th>Action</th>
 		<th>Time Spent</th>
 	</tr>
-	<tr py:for="i, entry in enumerate(vars.iteritems())" class="${'tgdb_row_even' if i%2 else 'tgdb_row_odd'} tgdb_row">
-		<td><strong>${entry[0]}</strong></td>
-		<td>${'%.4f' % entry[1]}&nbsp;ms</td>
+	<tr py:for="i, entry in enumerate(vars.iteritems())"
+			class="${'tgdb_row_even' if i%2 else 'tgdb_row_odd'} tgdb_row">
+		<td><strong py:content="entry[0]" /></td>
+		<td py:content="u'%.4f\xa0ms' % entry[1]" />
 	</tr>
 </table>
 
@@ -23,10 +24,10 @@
 		<th>Content Type</th>
 	</tr>
 	<tr class="tgdb_row tgdb_row_odd">
-		<td>${'%.4f' % vars['Render Time']}&nbsp;ms</td>
-		<td>${render_info.get('engine_name')}</td>
-		<td>${render_info.get('template_name')}</td>
-		<td>${render_info.get('content_type')}</td>
+		<td py:content="u'%.4f\xa0ms' % vars['Render Time']" />
+		<td py:content="render_info.get('engine_name')" />
+		<td py:content="render_info.get('template_name')" />
+		<td py:content="render_info.get('content_type')" />
 	</tr>
 </table>
 
@@ -43,13 +44,14 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr py:for="i, row in enumerate(function_calls)" class="${i%2 and 'tgdb_row_even' or 'tgdb_row_odd'} tgdb_row">
-			<td>${row['ncalls']}</td>
-			<td>${row['tottime']}</td>
-			<td>${'%.4f' % row['percall']}</td>
-			<td>${row['cumtime']}</td>
-			<td>${'%.4f' % row['percall_cum']}</td>
-			<td title="${row['filename_long']}">${row['filename']}</td>
+		<tr py:for="i, row in enumerate(function_calls)"
+				class="${i%2 and 'tgdb_row_even' or 'tgdb_row_odd'} tgdb_row">
+			<td py:content="row['ncalls']" />
+			<td py:content="row['tottime']" />
+			<td py:content="u'%.4f' % row['percall']" />
+			<td py:content="row['cumtime']" />
+			<td py:content="'%.4f' % row['percall_cum']" />
+			<td title="${row['filename_long']}" py:content="row['filename']" />
 		</tr>
 	</tbody>
 </table>

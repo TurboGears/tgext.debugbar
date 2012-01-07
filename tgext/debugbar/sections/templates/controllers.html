@@ -8,10 +8,11 @@
 		<th>Controller</th>
 		<th>Exposed Methods</th>
 	</tr>
-	<tr py:for="i, entry in enumerate(controllers.iteritems())" class="${'tgdb_row_odd' if i%2 else 'tgdb_row_even'} tgdb_row">
-		<td><strong>${entry[0]}</strong></td>
-		<td>${entry[1]['controller']}</td>
-		<td>${', '.join(entry[1]['exposed_methods'])}</td>
+	<tr py:for="i, entry in enumerate(controllers.iteritems())"
+			class="${'tgdb_row_odd' if i%2 else 'tgdb_row_even'} tgdb_row">
+		<td><strong py:content="entry[0]" /></td>
+		<td py:content="entry[1]['controller']" />
+		<td py:content="', '.join(entry[1]['exposed_methods'])" />
 	</tr>
 </table>
 </html>

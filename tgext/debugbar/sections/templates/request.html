@@ -2,15 +2,17 @@
 	xmlns:py="http://genshi.edgewall.org/"
 	py:strip="True">
 <div py:for="title, entries in vars.iteritems()">
-	<h1>${title}</h1>
+	<h1 py:content="title" />
+	<p py:if="not entries">Nothing here.</p>
 	<table class="tgdb_table" py:if="entries">
 		<tr>
 			<th>Name</th>
 			<th>Value</th>
 		</tr>
-		<tr py:for="i, entry in enumerate(entries)" class="${'tgdb_row_odd' if i%2 else 'tgdb_row_even'} tgdb_row">
-			<td><strong>${entry[0]}</strong></td>
-			<td>${entry[1]}</td>
+		<tr py:for="i, entry in enumerate(entries)"
+				class="${'tgdb_row_odd' if i%2 else 'tgdb_row_even'} tgdb_row">
+			<td><strong py:content="entry[0]" /></td>
+			<td py:content="entry[1]" />
 		</tr>
 	</table>
 </div>

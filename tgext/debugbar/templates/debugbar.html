@@ -2,7 +2,7 @@
 	xmlns:py="http://genshi.edgewall.org/"
 	py:strip="True">
 
-<script type="text/javascript" src="/_debugbar/statics/jquery.js"></script>
+<script type="text/javascript" src="${tg.url('/_debugbar/statics/jquery.js')}"></script>
 <script type="text/javascript">
 $(function($) {
 	var bar = $('#tgdb_debugbar');
@@ -38,18 +38,16 @@ $.noConflict();
 </script>
 
 <div id="tgdb_debugbar">
-	<div id="tgdb_button"></div>
+	<div id="tgdb_button" />
 	<div id="tgdb_barcontent">
 		<div class="tgdb_section" py:for="sect in sections" py:if="sect.is_active">
-			<div class="tgdb_title">${sect.title()}</div>
+			<div class="tgdb_title" py:content="sect.title()" />
 			<div class="tgdb_content">
-				<div class="tgdb_content_box">
-					${Markup(sect.content())}
-				</div>
-				<div class="tgdb_detail_box"></div>
+				<div class="tgdb_content_box" py:content="Markup(sect.content())" />
+				<div class="tgdb_detail_box" />
 			</div>
 		</div>
-		<div style="clear:both"></div>
+		<div style="clear:both" />
 	</div>
 </div>
 

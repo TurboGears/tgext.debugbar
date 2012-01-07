@@ -10,8 +10,9 @@ except:
     import simplejson as json
 
 import tg
-from tg import request, app_globals
+from tg import config, request, app_globals
 from tg.i18n import ugettext as _
+from tg.render import render
 
 from tgext.debugbar.sections.base import DebugSection
 from tgext.debugbar.utils import format_sql
@@ -42,7 +43,7 @@ try:
                 queries = getattr(req, 'tgdb_sqla_queries', [])
                 queries.append({
                     'engine_id': id(conn.engine),
-                    'duration': (stop_timer - conn.tgdb_start_timer)*1000,
+                    'duration': (stop_timer - conn.tgdb_start_timer) * 1000,
                     'statement': stmt,
                     'parameters': params,
                     'context': context
@@ -54,7 +55,9 @@ try:
 except ImportError:
     has_sqla = False
 
+
 class SQLADebugSection(DebugSection):
+
     name = 'SQLAlchemy'
 
     @property
@@ -62,7 +65,7 @@ class SQLADebugSection(DebugSection):
         if not has_sqla:
             return False
 
-        return tg.config.get('use_sqlalchemy', False)
+        return config.get('use_sqlalchemy', False)
 
     def title(self):
         return _('SQLAlchemy')
@@ -92,4 +95,7 @@ class SQLADebugSection(DebugSection):
             })
 
         delattr(request, 'tgdb_sqla_queries')
-        return unicode(tg.render.render(dict(queries=data, tg=tg), 'genshi', 'tgext.debugbar.sections.templates.sqla'))
+        return unicode(render(
+            dict(queries=data, tg=tg),
+            'genshi', 'tgext.debugbar.sections.templates.sqla'
+            ).split('\n', 1)[-1])

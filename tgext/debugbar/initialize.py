@@ -13,7 +13,7 @@ class DebugBarSetupper():
     def __call__(self):
         if not tg.config.get('debug', False):
             return
-       
+
         log.log(logging.INFO, 'Enabling Debug Toolbar')
         for sec in __sections__:
             if not sec.is_active:
@@ -39,7 +39,8 @@ def render_bars(response):
         return
 
     resources = '''<link rel="stylesheet" type="text/css" href="/_debugbar/statics/style.css"></link>'''
-    html = tg.render.render(dict(sections=__sections__), 'genshi', 'tgext.debugbar.templates.debugbar')
+    html = tg.render.render(dict(sections=__sections__), 'genshi',
+        'tgext.debugbar.templates.debugbar').split('\n', 1)[-1]
     response['response'] = response['response'].replace(literal('</head>'),
                                                         literal('%s</head>' % resources))
     response['response'] = response['response'].replace(literal('</body>'),

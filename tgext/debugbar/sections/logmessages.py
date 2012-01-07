@@ -2,11 +2,12 @@ import datetime
 import logging
 import threading
 
-import tg
 from tg.i18n import ugettext as _
+from tg.render import render
 
 from tgext.debugbar.sections.base import DebugSection
 from tgext.debugbar.utils import format_fname
+
 
 class ThreadTrackingHandler(logging.Handler):
     def __init__(self):
@@ -31,6 +32,7 @@ class ThreadTrackingHandler(logging.Handler):
 
 handler = ThreadTrackingHandler()
 logging.root.addHandler(handler)
+
 
 class LoggingDebugSection(DebugSection):
     name = 'Logging'
@@ -57,5 +59,7 @@ class LoggingDebugSection(DebugSection):
             })
 
         records = reversed(records)
-        return unicode(tg.render.render(dict(records=records),
-                                        'genshi', 'tgext.debugbar.sections.templates.logging'))
+        return unicode(render(
+            dict(records=records),
+            'genshi', 'tgext.debugbar.sections.templates.logging'
+            ).split('\n', 1)[-1])

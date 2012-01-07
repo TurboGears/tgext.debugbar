@@ -1,8 +1,8 @@
 import time, threading
 
-import tg
 from tg import request
 from tg.i18n import ugettext as _
+from tg.render import render
 
 from tgext.debugbar.sections.base import DebugSection
 from tgext.debugbar.utils import format_fname
@@ -20,23 +20,28 @@ try:
 except ImportError:
     pstats = None
 
+
 def on_before_render(*args, **kw):
     request.tgdb_render_start_time = time.time()
+
 
 def on_after_render(response, *args, **kw):
     now = time.time()
     request.tgdb_render_info = response
-    request.tgdb_render_time = (now - request.tgdb_render_start_time)*1000
-    request.tgdb_total_time = (now - request.tgdb_call_start_time)*1000
+    request.tgdb_render_time = (now - request.tgdb_render_start_time) * 1000
+    request.tgdb_total_time = (now - request.tgdb_call_start_time) * 1000
+
 
 def profile_wrapper(decoration, controller):
+
     def wrapped_controller(*args, **kw):
         profiler = profile.Profile()
 
         try:
             request.tgdb_call_start_time = time.time()
             result = profiler.runcall(controller, *args, **kw)
-            request.tgdb_call_time = (time.time() - request.tgdb_call_start_time)*1000
+            request.tgdb_call_time = (
+                time.time() - request.tgdb_call_start_time) * 1000
         except:
             raise
         finally:
@@ -85,7 +90,9 @@ def profile_wrapper(decoration, controller):
 
     return wrapped_controller
 
+
 class TimingDebugSection(DebugSection):
+
     name = 'Timings'
     is_active = True
     hooks = dict(controller_wrapper=[profile_wrapper],
@@ -97,13 +104,15 @@ class TimingDebugSection(DebugSection):
 
     def content(self):
         try:
-            return unicode(tg.render.render(dict(render_info=request.tgdb_render_info,
-                                                 stats=request.tgdb_profiling_stats,
-                                                 function_calls=request.tgdb_profiling_function_calls,
-                                                 vars={'Total Time':request.tgdb_total_time,
-                                                       'Controller Time':request.tgdb_call_time,
-                                                       'Render Time':request.tgdb_render_time}),
-                                            'genshi', 'tgext.debugbar.sections.templates.timing'))
+            return unicode(render(dict(
+                    render_info=request.tgdb_render_info,
+                    stats=request.tgdb_profiling_stats,
+                    function_calls=request.tgdb_profiling_function_calls,
+                    vars={'Total Time': request.tgdb_total_time,
+                        'Controller Time': request.tgdb_call_time,
+                        'Render Time': request.tgdb_render_time}),
+                'genshi', 'tgext.debugbar.sections.templates.timing'
+                ).split('\n', 1)[-1])
         finally:
             delattr(request, 'tgdb_render_info')
             delattr(request, 'tgdb_call_start_time')

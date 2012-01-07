@@ -1,12 +1,15 @@
-import time, inspect
+import time
+import inspect
+
 try:
     import json
 except:
     import simplejson as json
 
 import tg
-from tg import request
+from tg import config, request
 from tg.i18n import ugettext as _
+from tg.render import render
 
 from tgext.debugbar.sections.base import DebugSection
 from tgext.debugbar.utils import format_json
@@ -17,10 +20,12 @@ try:
     from ming.orm.ormsession import SessionExtension
 
     class TraceCursorExtension(SessionExtension):
+
         def cursor_created(self, cursor, action, *args, **kw):
             if action in ('find'):
                 cursor.tgdb_action = action
-                cursor.tgdb_class = inspect.isclass(args[0]) and args[0].__name__ or args[0]
+                cursor.tgdb_class = inspect.isclass(
+                    args[0]) and args[0].__name__ or args[0]
                 try:
                     cursor.tgdb_args = [args[1]]
                 except:
@@ -39,18 +44,19 @@ try:
 
             try:
                 req = request._current_obj()
-            except:
+            except Exception:
                 req = None
 
             if req is not None:
                 try:
                     active_cursors = req.tgdb_ming_cursors
-                except:
+                except Exception:
                     active_cursors = req.tgdb_ming_cursors = {}
-                info = active_cursors.setdefault(id(cursor), {'duration':0,
-                                                              'command':'',
-                                                              'collection':'',
-                                                              'params':''})
+                info = active_cursors.setdefault(id(cursor), {
+                  'duration': 0,
+                  'command': '',
+                  'collection': '',
+                  'params': ''})
                 info['duration'] += spent
                 if not hasattr(cursor, 'tgdb_action'):
                     return
@@ -63,17 +69,21 @@ try:
 except ImportError:
     has_ming = False
 
+
 def hook_ming(*args, **kw):
     global has_ming
     if not has_ming:
         return
 
     try:
-        tg.config['package'].model.DBSession.register_extension(TraceCursorExtension)
-    except:
+        config['package'].model.DBSession.register_extension(
+            TraceCursorExtension)
+    except Exception:
         has_ming = False
 
+
 class MingDebugSection(DebugSection):
+
     name = 'Ming'
     hooks = dict(startup=[hook_ming])
 
@@ -82,7 +92,7 @@ class MingDebugSection(DebugSection):
         if not has_ming:
             return False
 
-        return tg.config.get('use_ming', False)
+        return config.get('use_ming', False)
 
     def title(self):
         return _('Ming')
@@ -100,8 +110,11 @@ class MingDebugSection(DebugSection):
                 'command': query['command'],
                 'collection': query['collection'],
                 'filter': format_json(params),
-                'params':params
+                'params': params
             })
 
         delattr(request, 'tgdb_ming_cursors')
-        return unicode(tg.render.render(dict(queries=data, tg=tg), 'genshi', 'tgext.debugbar.sections.templates.ming'))
+        return unicode(render(
+            dict(queries=data, tg=tg),
+            'genshi', 'tgext.debugbar.sections.templates.ming'
+            ).split('\n', 1)[-1])

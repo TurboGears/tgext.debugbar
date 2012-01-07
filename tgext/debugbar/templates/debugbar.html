@@ -1,21 +1,37 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      py:strip="">
+	xmlns:py="http://genshi.edgewall.org/"
+	py:strip="True">
 
 <script type="text/javascript" src="/_debugbar/statics/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	var bar = $('#tgdb_debugbar');
+	$('#tgdb_button', bar).click(function() {
+		$('#tgdb_barcontent').slideToggle();
+	});
+	$('.tgdb_title', bar).click(function() {
+		var title = $(this);
+		var content = title.siblings();
+		$('.tgdb_content', bar).not(content).hide();
+		content.slideToggle();
+	});
+});
+$.noConflict();
+</script>
 
 <div id="tgdb_debugbar">
-    <div id="tgdb_button" onclick="jQuery('#tgdb_barcontent').slideToggle()"></div>
-    <div id="tgdb_barcontent">
-        <div class="tgdb_section" py:for="sect in sections" py:if="sect.is_active">
-            <div class="tgdb_title" onclick="jQuery('.tgdb_content').not(jQuery(this).siblings()).hide(); jQuery(this).siblings().slideToggle()">${sect.title()}</div>
-            <div class="tgdb_content">
-                <div class="tgdb_content_box">
-                    ${Markup(sect.content())}
-                </div>
-            </div>
-        </div>
-        <div style="clear:both"></div>
-    </div>
+	<div id="tgdb_button"></div>
+	<div id="tgdb_barcontent">
+		<div class="tgdb_section" py:for="sect in sections" py:if="sect.is_active">
+			<div class="tgdb_title">${sect.title()}</div>
+			<div class="tgdb_content">
+				<div class="tgdb_content_box">
+					${Markup(sect.content())}
+				</div>
+			</div>
+		</div>
+		<div style="clear:both"></div>
+	</div>
 </div>
+
 </html>

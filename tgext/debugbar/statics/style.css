@@ -38,6 +38,10 @@
 	height: 24px;
 }
 
+#tgdb_debugbar .tgdb_title.highlight {
+	color: #FC6;
+}
+
 #tgdb_debugbar .tgdb_content {
 	z-index: 998;
 	color: black;

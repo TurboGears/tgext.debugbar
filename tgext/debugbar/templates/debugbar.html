@@ -12,7 +12,9 @@ $(function($) {
 	$('.tgdb_title', bar).click(function() {
 		var title = $(this);
 		var content = title.siblings();
+		$('.tgdb_title', bar).not(title).removeClass('highlight');
 		$('.tgdb_content', bar).not(content).hide();
+		title.toggleClass('highlight');
 		content.slideToggle();
 	});
 });

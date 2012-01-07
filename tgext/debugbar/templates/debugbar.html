@@ -5,35 +5,34 @@
 <script type="text/javascript" src="${tg.url('/_debugbar/statics/jquery.js')}"></script>
 <script type="text/javascript">
 $(function($) {
-    var bar = $('#tgdb_debugbar');
-    $('.tgdb_detail_box', bar).hide();
-    $('#tgdb_button', bar).click(function() {
-        $('#tgdb_barcontent').animate({width: 'toggle'});
-    });
-    $('.tgdb_title', bar).click(function() {
-        var title = $(this);
-        var content = title.siblings();
-        $('.tgdb_title', bar).not(title).removeClass('highlight');
-        $('.tgdb_content', bar).not(content).hide();
-        title.toggleClass('highlight');
-        content.slideToggle();
-    });
-    $('.tgdb_query a', bar).click(function() {
-        var master = $(this).closest('.tgdb_content_box');
-        var detail = master.next();
-        detail.load($(this).attr('href'), function() {
-            detail.fadeIn(function() {
-                $('.tgdb_back a', detail).one('click',
-                        function() {
-                            detail.hide();
-                            master.fadeIn();
-                            return false;
-                        });
-            });
-        });
-        master.hide();
-        return false;
-    });
+	var bar = $('#tgdb_debugbar');
+	$('.tgdb_detail_box', bar).hide();
+	$('#tgdb_button', bar).click(function() {
+		$('#tgdb_barcontent').animate({width: 'toggle'});
+	});
+	$('.tgdb_title', bar).click(function() {
+		var title = $(this);
+		var content = title.siblings();
+		$('.tgdb_title', bar).not(title).removeClass('highlight');
+		$('.tgdb_content', bar).not(content).hide();
+		title.toggleClass('highlight');
+		content.slideToggle();
+	});
+	$('.tgdb_query a', bar).click(function() {
+		var master = $(this).closest('.tgdb_content_box');
+		var detail = master.next();
+		master.hide();
+		detail.load($(this).attr('href'), function() {
+			detail.fadeIn(function() {
+				$('.tgdb_back a', detail).one('click', function() {
+					detail.hide();
+					master.fadeIn();
+					return false;
+				});
+			});
+		});
+		return false;
+	});
 });
 $.noConflict();
 </script>

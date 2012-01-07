@@ -52,9 +52,10 @@ class DebugBar():
 
     def render_bars(self, response):
         page = response.get('response')
-        if (not page or 'text/html' not in response['content_type']
-                or not isinstance(page, unicode) or request.headers.get(
-                    'X-Requested-With', None) == 'XMLHttpRequest'):
+        if (not page or not isinstance(page, unicode)
+                or 'text/html' not in response['content_type']
+                or request.headers.get(
+                    'X-Requested-With') == 'XMLHttpRequest'):
             return
         pos_head = page.find('</head>')
         if pos_head > 0:

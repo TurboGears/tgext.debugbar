@@ -1,56 +1,56 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      py:strip="">
+	xmlns:py="http://genshi.edgewall.org/"
+	py:strip="True">
 
 <h1>Timing</h1>
 <table class="tgdb_table">
-    <tr>
-        <th>Action</th>
-        <th>Time Spent</th>
-    </tr>
-    <tr py:for="i, entry in enumerate(vars.iteritems())" class="${'tgdb_row_even' if i%2 else 'tgdb_row_odd'} tgdb_row">
-        <td><strong>${entry[0]}</strong></td>
-        <td>${'%.4f' % entry[1]}&nbsp;ms</td>
-    </tr>
+	<tr>
+		<th>Action</th>
+		<th>Time Spent</th>
+	</tr>
+	<tr py:for="i, entry in enumerate(vars.iteritems())" class="${'tgdb_row_even' if i%2 else 'tgdb_row_odd'} tgdb_row">
+		<td><strong>${entry[0]}</strong></td>
+		<td>${'%.4f' % entry[1]}&nbsp;ms</td>
+	</tr>
 </table>
 
 <h1>Template</h1>
 <table class="tgdb_table">
-    <tr>
-        <th>Time</th>
-        <th>Engine</th>
-        <th>Template</th>
-        <th>Content Type</th>
-    </tr>
-    <tr class="tgdb_row tgdb_row_odd">
-        <td>${'%.4f' % vars['Render Time']}&nbsp;ms</td>
-        <td>${render_info.get('engine_name')}</td>
-        <td>${render_info.get('template_name')}</td>
-        <td>${render_info.get('content_type')}</td>
-    </tr>
+	<tr>
+		<th>Time</th>
+		<th>Engine</th>
+		<th>Template</th>
+		<th>Content Type</th>
+	</tr>
+	<tr class="tgdb_row tgdb_row_odd">
+		<td>${'%.4f' % vars['Render Time']}&nbsp;ms</td>
+		<td>${render_info.get('engine_name')}</td>
+		<td>${render_info.get('template_name')}</td>
+		<td>${render_info.get('content_type')}</td>
+	</tr>
 </table>
 
 <h1>Profiling</h1>
 <table class="tgdb_table">
-    <thead>
-        <tr>
-            <th>Calls</th>
-            <th>Total</th>
-            <th>Percall</th>
-            <th>Cumu</th>
-            <th>CumuPer</th>
-            <th>Func</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr py:for="i, row in enumerate(function_calls)" class="${i%2 and 'tgdb_row_even' or 'tgdb_row_odd'} tgdb_row">
-            <td>${row['ncalls']}</td>
-            <td>${row['tottime']}</td>
-            <td>${'%.4f' % row['percall']}</td>
-            <td>${row['cumtime']}</td>
-            <td>${'%.4f' % row['percall_cum']}</td>
-            <td title="${row['filename_long']}">${row['filename']}</td>
-        </tr>
-    </tbody>
+	<thead>
+		<tr>
+			<th>Calls</th>
+			<th>Total</th>
+			<th>Percall</th>
+			<th>Cumu</th>
+			<th>CumuPer</th>
+			<th>Func</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr py:for="i, row in enumerate(function_calls)" class="${i%2 and 'tgdb_row_even' or 'tgdb_row_odd'} tgdb_row">
+			<td>${row['ncalls']}</td>
+			<td>${row['tottime']}</td>
+			<td>${'%.4f' % row['percall']}</td>
+			<td>${row['cumtime']}</td>
+			<td>${'%.4f' % row['percall_cum']}</td>
+			<td title="${row['filename_long']}">${row['filename']}</td>
+		</tr>
+	</tbody>
 </table>
 </html>

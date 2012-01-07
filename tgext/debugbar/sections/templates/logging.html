@@ -1,19 +1,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      py:strip="">
+	xmlns:py="http://genshi.edgewall.org/"
+	py:strip="True">
 <h1>Log Messages</h1>
 <table class="tgdb_table">
-    <tr>
-        <th>Level</th>
-        <th>Time</th>
-        <th>Message</th>
-        <th>Location</th>
-    </tr>
-    <tr py:for="i, record in enumerate(records)" class="${'tgdb_row_odd' if i%2 else 'tgdb_row_even'} tgdb_row">
-        <td><strong>${record['level']}</strong></td>
-        <td>${record['time']}</td>
-        <td>${record['message']}</td>
-        <td title="${record['file_long']}:${record['line']}">${record['file']}:${record['line']}</td>
-    </tr>
+	<tr>
+		<th>Level</th>
+		<th>Time</th>
+		<th>Message</th>
+		<th>Location</th>
+	</tr>
+	<tr py:for="i, record in enumerate(records)" class="${'tgdb_row_odd' if i%2 else 'tgdb_row_even'} tgdb_row">
+		<td><strong>${record['level']}</strong></td>
+		<td>${record['time']}</td>
+		<td>${record['message']}</td>
+		<td title="${record['file_long']}:${record['line']}">${record['file']}:${record['line']}</td>
+	</tr>
 </table>
 </html>

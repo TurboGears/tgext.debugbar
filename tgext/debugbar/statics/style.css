@@ -1,3 +1,7 @@
+#tgdb_debugbar {
+	font-family: verdana, arial, helvetica, sans-serif;
+}
+
 #tgdb_debugbar #tgdb_button {
 	z-index: 999;
 	width: 40px;
@@ -29,8 +33,9 @@
 
 #tgdb_debugbar .tgdb_title {
 	font-size: 18px;
+	line-height: 21px;
+	font-variant: small-caps;
 	color: white;
-	font-weight: bold;
 	border-right: 1px solid #CCC;
 	margin-right: 10px;
 	padding-right: 10px;
@@ -59,8 +64,14 @@
 	left: 0px;
 }
 
+#tgdb_debugbar h1 {
+	font-size: 20px;
+	font-weight: bold;
+}
+
 #tgdb_debugbar .tgdb_content_box {
 	margin: 10px;
+	font-size: 12px;
 }
 
 #tgdb_debugbar .tgdb_table {
@@ -73,8 +84,13 @@
 	white-space: pre-wrap;
 }
 
+#tgdb_debugbar .tgdb_table td {
+	font-size: 12px;
+}
+
 #tgdb_debugbar .tgdb_table th {
-	font-size: 16px;
+	font-size: 14px;
+	font-weight: bold;
 }
 
 #tgdb_debugbar .tgdb_table th, .tgdb_table td {

@@ -1,85 +1,85 @@
 #tgdb_debugbar #tgdb_button {
-    z-index:999;
-    width:40px;
-    height:36px;
-    border-bottom-right-radius:15px;
-    position:fixed;
-    top:0;
-    left:0;
-    background-color:rgba(0, 0, 0, 0.6);
-    background-repeat:no-repeat;
-    background-image:url('/_debugbar/statics/TgGear.png');
-    cursor:pointer;
+	z-index: 999;
+	width: 40px;
+	height: 36px;
+	border-bottom-right-radius: 15px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.6);
+	background-repeat: no-repeat;
+	background-image: url('/_debugbar/statics/TgGear.png');
+	cursor: pointer;
 }
 
 #tgdb_debugbar #tgdb_barcontent {
-    width:100%;
-    height:24px;
-    top:0;
-    left:40px;
-    padding-left: 10px;
-    position:fixed;
-    background-color:rgba(0, 0, 0, 0.6);
-    color: lightgray
+	width: 100%;
+	height: 24px;
+	top: 0;
+	left: 40px;
+	padding-left: 10px;
+	position: fixed;
+	background-color: rgba(0, 0, 0, 0.6);
+	color: #D3D3D3;
 }
 
 #tgdb_debugbar .tgdb_section {
-    float: left;
+	float: left;
 }
 
 #tgdb_debugbar .tgdb_title {
-    font-size: 18px;
-    color: white;
-    font-weight: bold;
-    border-right: 1px solid #CCCCCC;
-    margin-right: 10px;
-    padding-right: 10px;
-    cursor: pointer;
-    height:24px;
+	font-size: 18px;
+	color: white;
+	font-weight: bold;
+	border-right: 1px solid #CCC;
+	margin-right: 10px;
+	padding-right: 10px;
+	cursor: pointer;
+	height: 24px;
 }
 
 #tgdb_debugbar .tgdb_content {
-    z-index: 998;
-    color: black;
-    display: none;
-    width: 100%;
-    height: 600px;
-    overflow: auto;
-    position: fixed;
-    top: 24px;
-    padding-top: 20px;
-    background-color: #EEE;
-    opacity: 1.0;
-    box-shadow: 0px 20px 20px #444;
-    left: 0px;
+	z-index: 998;
+	color: black;
+	display: none;
+	width: 100%;
+	height: 600px;
+	overflow: auto;
+	position: fixed;
+	top: 24px;
+	padding-top: 20px;
+	background-color: #EEE;
+	opacity: 1.0;
+	box-shadow: 0px 20px 20px #444;
+	left: 0px;
 }
 
 #tgdb_debugbar .tgdb_content_box {
-    margin: 10px;
+	margin: 10px;
 }
 
-.tgdb_table {
-    background-color: white;
-    border: 2px solid #CCC;
-    border-collapse: collapse;
+#tgdb_debugbar .tgdb_table {
+	background-color: white;
+	border: 2px solid #CCC;
+	border-collapse: collapse;
 }
 
-.tgdb_table .highlight pre {
-    white-space: pre-wrap;
+#tgdb_debugbar .tgdb_table .highlight pre {
+	white-space: pre-wrap;
 }
 
-.tgdb_table th {
-    font-size: 16px;
+#tgdb_debugbar .tgdb_table th {
+	font-size: 16px;
 }
 
-.tgdb_table th, .tgdb_table td {
-    padding: 4px;
+#tgdb_debugbar .tgdb_table th, .tgdb_table td {
+	padding: 4px;
 }
 
-.tgdb_table .tgdb_row {
-    border-top:  2px solid #CCC;
+#tgdb_debugbar .tgdb_table .tgdb_row {
+	border-top: 2px solid #CCC;
 }
 
-.tgdb_table .tgdb_row_odd {
-    background-color: #FAFAFA;
+#tgdb_debugbar .tgdb_table .tgdb_row_odd {
+	background-color: #FAFAFA;
 }

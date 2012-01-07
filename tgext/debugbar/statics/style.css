@@ -75,22 +75,28 @@
 }
 
 #tgdb_debugbar .tgdb_table {
-	background-color: white;
 	border: 2px solid #CCC;
-	border-collapse: collapse;
+	border-collapse: separate;
+	border-spacing: 1px;
 }
 
 #tgdb_debugbar .tgdb_table .highlight pre {
 	white-space: pre-wrap;
 }
 
-#tgdb_debugbar .tgdb_table td, #tgdb_debugbar .tgdb_content p {
+#tgdb_debugbar .tgdb_content p {
 	font-size: 12px;
 }
 
 #tgdb_debugbar .tgdb_table th {
 	font-size: 14px;
 	font-weight: bold;
+	background-color: #FAFAFA;
+}
+
+#tgdb_debugbar .tgdb_table td {
+	font-size: 12px;
+	background-color: #FFF;
 }
 
 #tgdb_debugbar .tgdb_table th, .tgdb_table td {

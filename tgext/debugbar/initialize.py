@@ -2,7 +2,7 @@ import logging
 
 from webhelpers.html import literal
 
-from tg import config, request
+from tg import config, request, url
 from tg.render import render
 
 from tgext.debugbar.sections import __sections__
@@ -12,7 +12,11 @@ from tgext.debugbar.utils import get_root_controller
 log = logging.getLogger('tgext.debugbar')
 
 
-class DebugBarSetupper():
+class DebugBar():
+
+    css_link = u'<link rel="stylesheet" type="text/css" href="%s"></link>'
+    css_path = '/_debugbar/statics/style.css'
+    template = 'tgext.debugbar.templates.debugbar'
 
     def __init__(self, app_config):
         self.app_config = app_config
@@ -34,31 +38,37 @@ class DebugBarSetupper():
                     else:
                         self.app_config.register_hook(hook_name, hook)
 
-        self.app_config.register_hook('after_render', render_bars)
+        self.app_config.register_hook('after_render', self.render_first)
 
+    def render_first(self, response):
+        try:
+            self.app_config.hooks['after_render'].remove(self.render_first)
+        except ValueError:
+            pass  # pre-empted by another request
+        else:
+            get_root_controller()._debugbar = DebugBarController()
+            self.app_config.register_hook('after_render', self.render_bars)
+        self.render_bars(response)
 
-def mount_debugbar_controller(app):
-    root = get_root_controller()
-    root._debugbar = DebugBarController()
-    return app
-
-
-def render_bars(response):
-    if ('text/html' not in response['content_type']
-            or not isinstance(response['response'], unicode)
-            or request.headers.get(
+    def render_bars(self, response):
+        page = response.get('response')
+        if (not page or 'text/html' not in response['content_type']
+                or not isinstance(page, unicode) or request.headers.get(
                     'X-Requested-With', None) == 'XMLHttpRequest'):
-        return
-
-    resources = '''<link rel="stylesheet" type="text/css" href="/_debugbar/statics/style.css"></link>'''
-    html = render(dict(sections=__sections__), 'genshi',
-        'tgext.debugbar.templates.debugbar').split('\n', 1)[-1]
-    response['response'] = response['response'].replace(literal('</head>'),
-                                                        literal('%s</head>' % resources))
-    response['response'] = response['response'].replace(literal('</body>'),
-                                                        literal('%s</body>' % html))
+            return
+        pos_head = page.find('</head>')
+        if pos_head > 0:
+            pos_body = page.find('</body>', pos_head + 7)
+            if pos_body > 0:
+                response['response'] = ''.join(
+                    [page[:pos_head],
+                    literal(self.css_link % url(self.css_path)),
+                    page[pos_head:pos_body],
+                    literal(render(dict(sections=__sections__),
+                        'genshi', self.template,).split('\n', 1)[-1]),
+                    page[pos_body:]])
 
 
 def enable_debugbar(app_config):
-    app_config.register_hook('startup', DebugBarSetupper(app_config))
-    app_config.register_hook('after_config', mount_debugbar_controller)
+    app_config.register_hook('startup', DebugBar(app_config))
+

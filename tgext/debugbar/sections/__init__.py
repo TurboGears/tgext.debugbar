@@ -5,5 +5,11 @@ from controllers import ControllersDebugSection
 from logmessages import LoggingDebugSection
 from mingorm import MingDebugSection
 
-__sections__ = [TimingDebugSection(), RequestDebugSection(), SQLADebugSection(),
-                MingDebugSection(), ControllersDebugSection(), LoggingDebugSection()]
+__sections__ = [
+    TimingDebugSection(),
+    RequestDebugSection(),
+    SQLADebugSection(),
+    MingDebugSection(),
+    ControllersDebugSection(),
+    LoggingDebugSection()
+]

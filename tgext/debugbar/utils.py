@@ -1,4 +1,7 @@
-import sys, os, tg
+import sys
+import os
+
+from tg import config
 
 try:
     from pygments import highlight
@@ -18,22 +21,28 @@ try:
 
     mongo_tokens = {}
     mongo_tokens.update(JavascriptLexer.tokens)
-    mongo_tokens['root'].insert(0, (r'"(function(\\\\|\\"|[^"])*)"', using(InsideStringJavascriptLexer)))
+    mongo_tokens['root'].insert(0, (r'"(function(\\\\|\\"|[^"])*)"',
+        using(InsideStringJavascriptLexer)))
+
     class MongoLexer(JavascriptLexer):
         tokens = mongo_tokens
 
     HAVE_PYGMENTS = True
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     HAVE_PYGMENTS = False
 
+
 def get_root_controller():
-    module = tg.config['application_root_module']
-    if not sys.modules.has_key(module):
+    """Return the root controller of the application."""
+    module = config['application_root_module']
+    if module not in sys.modules:
         __import__(module)
     return sys.modules[module].RootController
 
+
 def format_sql(query):
-    if not HAVE_PYGMENTS: # pragma: no cover
+    """Format the given SQL query."""
+    if not HAVE_PYGMENTS:  # pragma: no cover
         return query
 
     return highlight(
@@ -41,14 +50,17 @@ def format_sql(query):
         SqlLexer(encoding='utf-8'),
         HtmlFormatter(encoding='utf-8', noclasses=True, style=SQL_STYLE))
 
+
 def format_json(json):
-    if not HAVE_PYGMENTS: # pragma: no cover
+    """Format the given JSON string."""
+    if not HAVE_PYGMENTS:  # pragma: no cover
         return json
 
     return highlight(
         json,
         MongoLexer(encoding='utf-8'),
         HtmlFormatter(encoding='utf-8', noclasses=True, style=JSON_STYLE))
+
 
 def common_segment_count(path, value):
     """Return the number of path segments common to both"""
@@ -61,11 +73,13 @@ def common_segment_count(path, value):
                 return 0
     return i
 
+
 def format_fname(value, _sys_path=None):
+    """Format the given file name."""
     if _sys_path is None:
-        _sys_path = sys.path # dependency injection
-    # If the value is not an absolute path, the it is a builtin or
-    # a relative file (thus a project file).
+        _sys_path = sys.path  # dependency injection
+    # If the value is not an absolute path, the it is a built-in
+    # or a relative file (thus a project file).
     if not os.path.isabs(value):
         if value.startswith(('{', '<')):
             return value

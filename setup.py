@@ -26,7 +26,7 @@ setup(name='tgext.debugbar',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['tgext'],
       include_package_data=True,
-      package_data = {'':['*.html', '*.js', '*.css', '*.png', '*.gif']},
+      package_data = {'': ['*.html', '*.js', '*.css', '*.png', '*.gif']},
       zip_safe=False,
       install_requires=[
         "TurboGears2 >= 2.1.4",

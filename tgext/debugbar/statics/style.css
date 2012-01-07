@@ -77,6 +77,10 @@
 	font-size: 12px;
 }
 
+#tgdb_debugbar .tgdb_content p {
+	font-size: 12px;
+}
+
 #tgdb_debugbar .tgdb_table {
 	border: 2px solid #CCC;
 	border-collapse: separate;
@@ -85,10 +89,6 @@
 
 #tgdb_debugbar .tgdb_table .highlight pre {
 	white-space: pre-wrap;
-}
-
-#tgdb_debugbar .tgdb_content p {
-	font-size: 12px;
 }
 
 #tgdb_debugbar .tgdb_table th {

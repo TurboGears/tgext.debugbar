@@ -8,7 +8,7 @@ $(function($) {
 	var bar = $('#tgdb_debugbar');
 	$('.tgdb_detail_box', bar).hide();
 	$('#tgdb_button', bar).click(function() {
-		$('#tgdb_barcontent').slideToggle();
+		$('#tgdb_barcontent').animate({width: 'toggle'});
 	});
 	$('.tgdb_title', bar).click(function() {
 		var title = $(this);

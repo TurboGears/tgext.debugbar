@@ -6,6 +6,7 @@
 <script type="text/javascript">
 $(function($) {
 	var bar = $('#tgdb_debugbar');
+	$('.tgdb_detail_box', bar).hide();
 	$('#tgdb_button', bar).click(function() {
 		$('#tgdb_barcontent').slideToggle();
 	});
@@ -16,6 +17,21 @@ $(function($) {
 		$('.tgdb_content', bar).not(content).hide();
 		title.toggleClass('highlight');
 		content.slideToggle();
+	});
+	$('.tgdb_query a', bar).click(function() {
+		var master = $(this).closest('.tgdb_content_box');
+		var detail = master.next();
+		detail.load($(this).attr('href'));
+		master.hide();
+		detail.fadeIn(function() {
+			$('.tgdb_back a', detail).one('click',
+				function() {
+					detail.hide();
+					master.fadeIn();
+					return false;
+				});
+		});
+		return false;
 	});
 });
 $.noConflict();
@@ -30,6 +46,7 @@ $.noConflict();
 				<div class="tgdb_content_box">
 					${Markup(sect.content())}
 				</div>
+				<div class="tgdb_detail_box"></div>
 			</div>
 		</div>
 		<div style="clear:both"></div>

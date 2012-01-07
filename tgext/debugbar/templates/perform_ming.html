@@ -1,34 +1,26 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/">
-<head>
-    <title>TurboGears Debug Bar - Perform Ming</title>
-    <style>
-        body {
-            background-color: #EEE;
-            color: black;
-        }
-    </style>
-</head>
-<body>
-    <div style="margin-top:50px;"></div>
-    
-    <h1>Executed Query</h1>
-    <table class="tgdb_table">
-        <tr class="tgdb_row"><td><strong>Collection</strong></td><td>${collection}</td></tr>
-        <tr class="tgdb_row"><td><strong>Action</strong></td><td>${action}</td></tr>
-        <tr class="tgdb_row"><td><strong>Time</strong></td><td>${'%.4f' % (duration)} ms</td></tr>
-        <tr class="tgdb_row"><td><strong>Parameters</strong></td><td>${Markup(params)}</td></tr>
-    </table>
+	xmlns:py="http://genshi.edgewall.org/"
+	py:strip="True">
 
-    <h1>Results</h1>
-    <table py:if="result" class="tgdb_table">
-        <tbody>
-            <tr py:for="i, row in enumerate(result)" class="${i%2 and 'tgdb_row_even' or 'tgdb_row_odd'} tgdb_row">
-                <td>${row}</td>
-            </tr>
-        </tbody>
-    </table>
-</body>
+
+<p class="tgdb_back"><a href="#">Back to the Query Overview</a></p>
+
+<h1>Executed Query</h1>
+<table class="tgdb_table">
+	<tr class="tgdb_row"><td><strong>Collection</strong></td><td>${collection}</td></tr>
+	<tr class="tgdb_row"><td><strong>Action</strong></td><td>${action}</td></tr>
+	<tr class="tgdb_row"><td><strong>Time</strong></td><td>${'%.4f' % (duration)} ms</td></tr>
+	<tr class="tgdb_row"><td><strong>Parameters</strong></td><td>${Markup(params)}</td></tr>
+</table>
+
+<h1>Query Results</h1>
+<table py:if="result" class="tgdb_table">
+	<tbody>
+		<tr py:for="i, row in enumerate(result)"
+				class="${i%2 and 'tgdb_row_even' or 'tgdb_row_odd'} tgdb_row">
+			<td py:content="row"/>
+		</tr>
+	</tbody>
+</table>
+
 </html>

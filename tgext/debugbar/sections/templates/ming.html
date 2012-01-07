@@ -5,23 +5,23 @@
 <table class="tgdb_table" style="width:90%;">
 	<thead>
 		<tr>
-			<th>Actions</th>
-			<th>Time&nbsp;(ms)</th>
 			<th>Command</th>
 			<th>Params</th>
+			<th>Time&nbsp;(ms)</th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr py:for="i, query in enumerate(queries)" style="background-color:#f8f8f8;"
-			class="${'tgdb_row_odd' if i%2 else 'tgdb_row_even'} tgdb_row">
-			<td>
-				<a href="${tg.url('/_debugbar/perform_ming', params=dict(collection=query['collection'], command=query['command'], params=query['params'], duration=query['duration']))}"
-					style="text-decoration: none;line-height:1.6em;">RESULTS</a>
-				<br/>
-			</td>
-			<td>${'%.4f' % query['duration']}</td>
+				class="${'tgdb_row_odd' if i%2 else 'tgdb_row_even'} tgdb_row">
 			<td><strong>${Markup(query['collection'])}</strong>.<em>${Markup(query['command'])}</em></td>
 			<td>${Markup(query['filter'])}</td>
+			<td>${'%.4f' % query['duration']}</td>
+			<td>
+				<p class="tgdb_query">
+					<a href="${tg.url('/_debugbar/perform_ming', params=dict(collection=query['collection'], command=query['command'], params=query['params'], duration=query['duration']))}">Results</a>
+				</p>
+			</td>
 		</tr>
 	</tbody>
 </table>

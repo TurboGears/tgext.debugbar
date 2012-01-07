@@ -5,26 +5,27 @@
 <table class="tgdb_table" style="width:90%;">
 	<thead>
 		<tr>
-			<th>Actions</th>
-			<th>Time&nbsp;(ms)</th>
 			<th>Query</th>
 			<th>Params</th>
+			<th>Time&nbsp;(ms)</th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr py:for="query in queries" class="tgdb_row">
-			<td>
-				<div py:if="query['is_select']" >
-					<a href="${tg.url('/_debugbar/perform_sql', params=dict(stmt=query['raw_sql'], params=query['params'], engine_id=query['engine_id'], duration=query['duration']))}"
-						style="text-decoration: none;line-height:1.6em;">RESULTS</a>
-					<br/>
-					<a href="${tg.url('/_debugbar/explain_sql', params=dict(stmt=query['raw_sql'], params=query['params'], engine_id=query['engine_id'], duration=query['duration']))}"
-						style="text-decoration: none;line-height:1.6em;">EXPLAIN</a>
-				</div>
-			</td>
-			<td>${'%.4f' % query['duration']}</td>
 			<td>${Markup(query['sql'])}</td>
 			<td>${Markup(query['params'])}</td>
+			<td>${'%.4f' % query['duration']}</td>
+			<td>
+				<div py:if="query['is_select']">
+					<p class="tgdb_query">
+						<a href="${tg.url('/_debugbar/perform_sql', params=dict(stmt=query['raw_sql'], params=query['params'], engine_id=query['engine_id'], duration=query['duration']))}">Results</a>
+					</p>
+					<p class="tgdb_query">
+						<a href="${tg.url('/_debugbar/perform_sql', params=dict(stmt=query['raw_sql'], params=query['params'], engine_id=query['engine_id'], duration=query['duration'], modify='explain'))}">Explain</a>
+					</p>
+				</div>
+			</td>
 		</tr>
 	</tbody>
 </table>

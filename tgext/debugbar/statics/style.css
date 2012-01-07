@@ -69,7 +69,7 @@
 	font-weight: bold;
 }
 
-#tgdb_debugbar .tgdb_content_box {
+#tgdb_debugbar .tgdb_content_box, #tgdb_debugbar .tgdb_detail_box {
 	margin: 10px;
 	font-size: 12px;
 }
@@ -84,7 +84,7 @@
 	white-space: pre-wrap;
 }
 
-#tgdb_debugbar .tgdb_table td {
+#tgdb_debugbar .tgdb_table td, #tgdb_debugbar .tgdb_content p {
 	font-size: 12px;
 }
 
@@ -104,3 +104,12 @@
 #tgdb_debugbar .tgdb_table .tgdb_row_odd {
 	background-color: #FAFAFA;
 }
+
+#tgdb_debugbar .tgdb_query, #tgdb_debugbar .tgdb_back {
+	font-variant: small-caps;
+}
+
+#tgdb_debugbar .tgdb_back {
+	text-align: right;
+}
+

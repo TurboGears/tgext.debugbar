@@ -15,6 +15,10 @@ from utils import format_sql, format_json
 statics_path = os.path.join(
     os.path.split(sys.modules['tgext.debugbar'].__file__)[0], 'statics')
 
+try:
+    from pymongo import json_util
+except:
+    pass
 
 class StaticsController(TGController):
 
@@ -64,7 +68,7 @@ class DebugBarController(TGController):
         if not command.startswith('find'):
             raise HTTPBadRequest('Not a find statement')
 
-        query_params = json.loads(params)
+        query_params = json.loads(params, object_hook=json_util.object_hook)
         session = config['package'].model.DBSession
 
         cursor = []

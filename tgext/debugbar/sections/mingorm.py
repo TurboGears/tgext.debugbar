@@ -18,6 +18,7 @@ try:
     import ming
     import ming.orm
     from ming.orm.ormsession import SessionExtension
+    from pymongo import json_util
 
     class TraceCursorExtension(SessionExtension):
 
@@ -104,7 +105,7 @@ class MingDebugSection(DebugSection):
 
         data = []
         for query in queries.values():
-            params = json.dumps(query['params'])
+            params = json.dumps(query['params'], default=json_util.default)
             data.append({
                 'duration': query['duration'],
                 'command': query['command'],

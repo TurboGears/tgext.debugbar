@@ -22,7 +22,7 @@ $(function($) {
 		var master = $(this).closest('.tgdb_content_box');
 		var detail = master.next();
 		master.hide();
-		detail.html('<p>&nbsp;</p><h1>Executing SQL...</h1>').show();
+		detail.html('<p>&nbsp;</p><h1>Fetching Informations...</h1>').show();
 		detail.load($(this).attr('href'), function() {
 			detail.hide().fadeIn(function() {
 				$('.tgdb_back a', detail).one('click', function() {

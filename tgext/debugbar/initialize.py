@@ -25,6 +25,9 @@ class DebugBar():
         if not config.get('debug', False):
             return
 
+        if 'genshi' not in self.app_config.renderers:
+            self.app_config.renderers.append('genshi')
+
         log.log(logging.INFO, 'Enabling Debug Toolbar')
         for sec in __sections__:
             if not sec.is_active:

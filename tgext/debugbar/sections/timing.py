@@ -23,21 +23,48 @@ except ImportError:
 def on_before_render(*args, **kw):
     request.tgdb_render_start_time = time.time()
 
-
 def on_after_render(response, *args, **kw):
     now = time.time()
-    request.tgdb_render_info = response
-    request.tgdb_render_time = (now - request.tgdb_render_start_time) * 1000
+
+    req = request._current_obj()
+    req.tgdb_render_info = response
+    req.tgdb_render_time = (now - req.tgdb_render_start_time) * 1000
 
     try:
-        request.tgdb_total_time = (now - request.tgdb_call_start_time) * 1000
+        req.tgdb_total_time = (now - req.tgdb_call_start_time) * 1000
     except:
-        request.tgdb_total_time = -1
-        request.tgdb_call_start_time = -1
-        request.tgdb_call_time = -1
-        request.tgdb_profiling_function_calls = []
-        request.tgdb_profiling_stats = []
+        req.tgdb_total_time = -1
+        req.tgdb_call_start_time = -1
+        req.tgdb_call_time = -1
+        req.tgdb_profiling_function_calls = []
+        req.tgdb_profiling_stats = []
 
+    try:
+        req.tgdb_render_call_start_time
+        req.tgdb_render_calls
+    except:
+        req.tgdb_render_calls = {}
+        req.tgdb_render_call_start_time = -1
+
+def on_before_render_call(template_engine, template_name, template_vars, kwargs):
+    request.tgdb_render_call_start_time = time.time()
+
+def on_after_render_call(template_engine, template_name, template_vars, kwargs):
+    now = time.time()
+    req = request._current_obj()
+
+    try:
+        render_calls = req.tgdb_render_calls
+    except:
+        render_calls = req.tgdb_render_calls = {}
+
+    template_key = '%s:%s' % (template_engine, template_name)
+    template_info = render_calls.setdefault(template_key, {'time':0,
+                                                           'count':0,
+                                                           'template_name':template_name,
+                                                           'template_engine':template_engine})
+    template_info['time'] += (now - req.tgdb_render_call_start_time) * 1000
+    template_info['count'] += 1
 
 def profile_wrapper(decoration, controller):
 
@@ -104,7 +131,9 @@ class TimingDebugSection(DebugSection):
     is_active = True
     hooks = dict(controller_wrapper=[profile_wrapper],
                  before_render=[on_before_render],
-                 after_render=[on_after_render])
+                 after_render=[on_after_render],
+                 before_render_call=[on_before_render_call],
+                 after_render_call=[on_after_render_call])
 
     def title(self):
         return _('Timings')
@@ -115,6 +144,7 @@ class TimingDebugSection(DebugSection):
                     render_info=request.tgdb_render_info,
                     stats=request.tgdb_profiling_stats,
                     function_calls=request.tgdb_profiling_function_calls,
+                    render_calls=request.tgdb_render_calls,
                     vars={'Total Time': request.tgdb_total_time,
                         'Controller Time': request.tgdb_call_time,
                         'Render Time': request.tgdb_render_time}),
@@ -125,6 +155,8 @@ class TimingDebugSection(DebugSection):
             delattr(request, 'tgdb_call_start_time')
             delattr(request, 'tgdb_call_time')
             delattr(request, 'tgdb_render_start_time')
+            delattr(request, 'tgdb_render_call_start_time')
+            delattr(request, 'tgdb_render_calls')
             delattr(request, 'tgdb_total_time')
             delattr(request, 'tgdb_render_time')
             delattr(request, 'tgdb_profiling_stats')

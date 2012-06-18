@@ -11,6 +11,7 @@ from tg.controllers import TGController, WSGIAppController
 from paste.urlparser import StaticURLParser
 from webob.exc import HTTPBadRequest
 from utils import format_sql, format_json
+from sections import __sections__
 
 statics_path = os.path.join(
     os.path.split(sys.modules['tgext.debugbar'].__file__)[0], 'statics')
@@ -28,7 +29,6 @@ class StaticsController(TGController):
 
 
 class DebugBarController(TGController):
-
     statics = StaticsController()
 
     @expose('genshi:tgext.debugbar.templates.perform_sql')
@@ -87,3 +87,10 @@ class DebugBarController(TGController):
             result=cursor,
             collection=collection,
             duration=float(duration))
+
+    @expose()
+    def changed(self, **kw):
+        for sect in __sections__:
+            if hasattr(sect, 'changed'):
+                return str(int(sect.changed()))
+        return '0'

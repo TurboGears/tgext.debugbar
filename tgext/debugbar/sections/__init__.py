@@ -4,6 +4,7 @@ from request_vars import RequestDebugSection
 from controllers import ControllersDebugSection
 from logmessages import LoggingDebugSection
 from mingorm import MingDebugSection
+from inventing import InventingDebugSection
 
 __sections__ = [
     TimingDebugSection(),
@@ -11,5 +12,6 @@ __sections__ = [
     SQLADebugSection(),
     MingDebugSection(),
     ControllersDebugSection(),
-    LoggingDebugSection()
+    LoggingDebugSection(),
+    InventingDebugSection()
 ]

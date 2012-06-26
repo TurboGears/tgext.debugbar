@@ -8,7 +8,7 @@ from tgext.debugbar.sections.base import DebugSection
 from tgext.debugbar.utils import format_fname
 
 try:
-    import cPprofile as profile
+    import cProfile as profile
 except ImportError:
     try:
         import profile

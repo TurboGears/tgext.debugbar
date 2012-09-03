@@ -6,14 +6,11 @@ from tg import config, request, url
 from tg.render import render
 
 from tgext.debugbar.sections import __sections__
-from tgext.debugbar.controller import DebugBarController
 from tgext.debugbar.utils import get_root_controller
 
 log = logging.getLogger('tgext.debugbar')
 
-
 class DebugBar():
-
     css_link = u'<link rel="stylesheet" type="text/css" href="%s" />'
     css_path = '/_debugbar/statics/style.css'
     template = 'tgext.debugbar.templates.debugbar'
@@ -52,6 +49,7 @@ class DebugBar():
         except ValueError:
             pass  # pre-empted by another request
         else:
+            from tgext.debugbar.controller import DebugBarController
             get_root_controller()._debugbar = DebugBarController()
             self.app_config.register_hook('after_render', self.render_bars)
         self.render_bars(response)

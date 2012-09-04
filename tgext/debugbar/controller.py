@@ -87,10 +87,3 @@ class DebugBarController(TGController):
             result=cursor,
             collection=collection,
             duration=float(duration))
-
-    @expose()
-    def changed(self, **kw):
-        for sect in __sections__:
-            if hasattr(sect, 'changed'):
-                return str(int(sect.changed()))
-        return '0'

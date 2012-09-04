@@ -1,4 +1,5 @@
 import hashlib
+from datetime import datetime
 
 from tg import config
 from tg.render import render
@@ -9,6 +10,8 @@ from tgext.debugbar.sections.base import DebugSection
 
 from markupsafe import Markup
 
+_reload_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+
 def on_after_render(response, *args, **kw):
     content_type = response.get('content_type', '')
     template = response.get('template_name')
@@ -17,7 +20,7 @@ def on_after_render(response, *args, **kw):
     if content_type and 'text/html' in content_type and template and isinstance(page, unicode):
         m = hashlib.md5()
         m.update(page.encode('utf-8'))
-        m = m.hexdigest()
+        m = m.hexdigest() + _reload_datetime
 
         pos_head = page.find('</head>')
         if pos_head > 0:
@@ -32,19 +35,10 @@ class InventingDebugSection(DebugSection):
     name = 'Inventing'
     is_active = True
     hooks = dict(after_render=[on_after_render])
-    _changed = True
 
     js_reloadscript = '''
 <script>
 function tgext_debugbar_check_changed() {
-    DebugBarJQuery.ajax('/_debugbar/changed', {
-        'success': function(data, textStatus, jqXHR) {
-            if (data === '1')
-                window.location.reload();
-        },
-        'error':function(jqXHR, textStatus, errorThrown) {}
-    });
-
     DebugBarJQuery.ajax(window.location.href, {
         'success': function(data, textStatus, jqXHR) {
             var page_hash_re = /tgext_debugbar_page_hash="(.*)";/;
@@ -57,9 +51,13 @@ function tgext_debugbar_check_changed() {
                 }
             }
             DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_error');
+            DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_warning');
             tgext_debugbar_init_inventing();
         },
         'error':function(jqXHR, textStatus, errorThrown) {
+            DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_error');
+            DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_warning');
+
             if (jqXHR.status && jqXHR.status >= 500) {
                 DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').addClass('tgdb_barcontent_error');
             }
@@ -83,14 +81,7 @@ function tgext_debugbar_init_inventing() {
     def title(self):
         return _('Inventing')
 
-    def changed(self):
-        try:
-            return self._changed
-        finally:
-            self._changed = False
-
     def content(self):
-        self.changed()
         inventing_enabled = asbool(config.get('debugbar.inventing', 'false'))
 
         result = u''

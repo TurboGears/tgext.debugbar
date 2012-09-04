@@ -162,3 +162,8 @@
 .tgdb_barcontent_error {
     background-color: rgba(180, 0, 0, 0.6) !important;
 }
+
+.tgdb_barcontent_warning {
+    background-color: rgba(80, 80, 0, 0.6) !important;
+}
+

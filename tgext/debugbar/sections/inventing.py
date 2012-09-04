@@ -60,8 +60,14 @@ function tgext_debugbar_check_changed() {
             tgext_debugbar_init_inventing();
         },
         'error':function(jqXHR, textStatus, errorThrown) {
-            if (jqXHR.status && jqXHR.status != 0) {
+            if (jqXHR.status && jqXHR.status >= 500) {
                 DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').addClass('tgdb_barcontent_error');
+            }
+            else if (jqXHR.status && jqXHR.status < 500) {
+                //Probably not an error in this case, yet to decide if to alert it somehow
+            }
+            else {
+                DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').addClass('tgdb_barcontent_warning');
             }
             tgext_debugbar_init_inventing();
         }

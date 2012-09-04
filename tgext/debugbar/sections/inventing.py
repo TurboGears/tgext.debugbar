@@ -1,7 +1,7 @@
 import hashlib
 from datetime import datetime
 
-from tg import config
+from tg import config, tmpl_context
 from tg.render import render
 from tg.i18n import ugettext as _
 
@@ -83,6 +83,7 @@ function tgext_debugbar_init_inventing() {
 
     def content(self):
         inventing_enabled = asbool(config.get('debugbar.inventing', 'false'))
+        inventing_enabled = getattr(tmpl_context, 'debugbar_inventing', inventing_enabled)
 
         result = u''
         result += Markup(self.js_reloadscript)

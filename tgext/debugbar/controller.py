@@ -18,8 +18,11 @@ statics_path = os.path.join(
 
 try:
     from pymongo import json_util
-except:
-    pass
+except ImportError:
+    try:
+        from bson import json_util
+    except ImportError:
+        pass
 
 class StaticsController(TGController):
 

@@ -15,10 +15,14 @@ from tgext.debugbar.sections.base import DebugSection
 from tgext.debugbar.utils import format_json
 
 try:
+    from pymongo import json_util
+except ImportError:
+    from bson import json_util
+
+try:
     import ming
     import ming.orm
     from ming.orm.ormsession import SessionExtension
-    from pymongo import json_util
 
     class TraceCursorExtension(SessionExtension):
 

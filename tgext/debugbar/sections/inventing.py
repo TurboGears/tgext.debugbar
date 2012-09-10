@@ -1,4 +1,4 @@
-import hashlib
+import hashlib, re, logging, os, time
 from datetime import datetime
 
 from tg import config, tmpl_context
@@ -10,7 +10,35 @@ from tgext.debugbar.sections.base import DebugSection
 
 from markupsafe import Markup
 
+log = logging.getLogger('tgext.debugbar')
+
 _reload_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+_href_re = re.compile(r'''href=["\']([^\'\"]+)[\'"]''', re.UNICODE|re.IGNORECASE)
+
+def detect_stylesheets(page):
+    try:
+        base_dir = config['pylons.paths']['static_files']
+    except:
+        log.warn('Unable to detect static files path, skipping inventing mode on stylesheets')
+        return []
+
+    files = []
+
+    line = page.find('stylesheet')
+    while line >= 0:
+        css_link = _href_re.search(page[line:])
+        if css_link:
+            css_file = css_link.group(1)
+            css_file = css_file.replace('/', os.sep)
+            if css_file.startswith(os.sep):
+                css_file = css_file[1:]
+
+            css_file = os.path.join(base_dir, css_file)
+            if os.path.exists(css_file):
+                files.append(css_file)
+        line = page.find('stylesheet', line+1)
+
+    return files
 
 def on_after_render(response, *args, **kw):
     content_type = response.get('content_type', '')
@@ -21,6 +49,17 @@ def on_after_render(response, *args, **kw):
         m = hashlib.md5()
         m.update(page.encode('utf-8'))
         m = m.hexdigest() + _reload_datetime
+
+        if config.get('debugbar.inventing_css', False):
+            newest_modified_time = 0
+
+            for f in detect_stylesheets(page):
+                modified_time = os.path.getmtime(f)
+                if modified_time > newest_modified_time:
+                    newest_modified_time = modified_time
+
+            if newest_modified_time:
+                m += str(newest_modified_time)
 
         pos_head = page.find('</head>')
         if pos_head > 0:

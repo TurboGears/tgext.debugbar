@@ -17,7 +17,10 @@ from tgext.debugbar.utils import format_json
 try:
     from pymongo import json_util
 except ImportError:
-    from bson import json_util
+    try:
+        from bson import json_util
+    except ImportError:
+        has_ming = False
 
 try:
     import ming

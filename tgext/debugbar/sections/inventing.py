@@ -66,7 +66,7 @@ def on_after_render(response, *args, **kw):
             pos_body = page.find('</body>', pos_head + 7)
             if pos_body > 0:
                 response['response'] = ''.join([page[:pos_head],
-                                                Markup('<script>var tgext_debugbar_page_hash="%s";</script>' % m),
+                                                Markup('<script>if(typeof tgext_debugbar_page_hash === "undefined") window.tgext_debugbar_page_hash="%s";</script>' % m),
                                                 page[pos_head:pos_body],
                                                 page[pos_body:]])
 

@@ -25,6 +25,7 @@
 	position: fixed;
 	background-color: rgba(0, 0, 0, 0.6);
 	color: #D3D3D3;
+	z-index: 998;
 }
 
 #tgdb_debugbar .tgdb_section {

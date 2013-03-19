@@ -2,8 +2,12 @@ import inspect
 
 from tg.controllers.decoratedcontroller import DecoratedController
 from tg.i18n import ugettext as _
-from tg.util import odict
 from tg.render import render
+
+try:
+    from tg.util import odict
+except ImportError:
+    from collections import OrderedDict as odict
 
 from tgext.debugbar.sections.base import DebugSection
 from tgext.debugbar.utils import get_root_controller

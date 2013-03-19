@@ -8,13 +8,18 @@ except:
 
 from tg import app_globals, config, expose
 from tg.controllers import TGController, WSGIAppController
-from paste.urlparser import StaticURLParser
 from webob.exc import HTTPBadRequest
 from utils import format_sql, format_json
 from sections import __sections__
 
 statics_path = os.path.join(
     os.path.split(sys.modules['tgext.debugbar'].__file__)[0], 'statics')
+
+
+try:
+    from webob.static import DirectoryApp
+except ImportError:
+    from paste.urlparser import StaticURLParser as DirectoryApp
 
 try:
     from pymongo import json_util
@@ -28,7 +33,7 @@ class StaticsController(TGController):
 
     @expose()
     def _lookup(self, *args):
-        return WSGIAppController(StaticURLParser(statics_path)), args
+        return WSGIAppController(DirectoryApp(statics_path)), args
 
 
 class DebugBarController(TGController):

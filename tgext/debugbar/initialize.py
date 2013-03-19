@@ -1,6 +1,6 @@
 import logging
 
-from webhelpers.html import literal
+from markupsafe import Markup
 
 from tg import config, request, url
 from tg.render import render
@@ -67,9 +67,9 @@ class DebugBar():
             if pos_body > 0:
                 response['response'] = ''.join(
                     [page[:pos_head],
-                    literal(self.css_link % url(self.css_path)),
+                    Markup(self.css_link % url(self.css_path)),
                     page[pos_head:pos_body],
-                    literal(render(dict(sections=__sections__),
+                    Markup(render(dict(sections=__sections__),
                         'genshi', self.template,).split('\n', 1)[-1]),
                     page[pos_body:]])
 

@@ -17,7 +17,7 @@ _href_re = re.compile(r'''href=["\']([^\'\"]+)[\'"]''', re.UNICODE|re.IGNORECASE
 
 def detect_stylesheets(page):
     try:
-        base_dir = config['pylons.paths']['static_files']
+        base_dir = config.get('paths', config.get('pylons.paths'))['static_files']
     except:
         log.warn('Unable to detect static files path, skipping inventing mode on stylesheets')
         return []

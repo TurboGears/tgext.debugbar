@@ -2,8 +2,12 @@ from pprint import saferepr
 
 import tg
 from tg.i18n import ugettext as _
-from tg.util import odict
 from tg.render import render
+
+try:
+    from tg.util import odict
+except ImportError:
+    from collections import OrderedDict as odict
 
 from tgext.debugbar.sections.base import DebugSection
 
@@ -34,7 +38,7 @@ class RequestDebugSection(DebugSection):
         vars = odict()
         request = tg.request._current_obj()
         response = tg.response._current_obj()
-        attr_dict = request.environ['webob.adhoc_attrs'].copy()
+        attr_dict = request.environ.get('webob.adhoc_attrs', {}).copy()
         attr_dict['response'] = repr(response.__dict__)
 
         for entry in attr_dict.keys():

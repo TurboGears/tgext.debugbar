@@ -60,7 +60,14 @@ class DebugBar():
                 or 'text/html' not in response['content_type']
                 or request.headers.get(
                     'X-Requested-With') == 'XMLHttpRequest'):
+
+            if config.get('debugbar.enable_logs', False):
+                for section in __sections__:
+                    if hasattr(section, 'log_content'):
+                        section.log_content()
+
             return
+
         pos_head = page.find('</head>')
         if pos_head > 0:
             pos_body = page.find('</body>', pos_head + 7)

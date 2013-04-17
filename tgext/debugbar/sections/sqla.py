@@ -3,6 +3,7 @@ from __future__ import with_statement
 import threading
 import time
 import weakref
+import logging
 
 try:
     import json
@@ -17,6 +18,7 @@ from tg.render import render
 from tgext.debugbar.sections.base import DebugSection
 from tgext.debugbar.utils import format_sql
 
+log = logging.getLogger('tgext.debugbar.sqla')
 lock = threading.Lock()
 
 try:
@@ -70,10 +72,10 @@ class SQLADebugSection(DebugSection):
     def title(self):
         return _('SQLAlchemy')
 
-    def content(self):
+    def _gather_queries(self):
         queries = getattr(request, 'tgdb_sqla_queries', [])
         if not queries:
-            return 'No queries in executed by the controller.'
+            return []
 
         data = []
         for query in queries:
@@ -92,10 +94,21 @@ class SQLADebugSection(DebugSection):
                 'params': params,
                 'is_select': is_select,
                 'context': query['context'],
-            })
+                })
 
         delattr(request, 'tgdb_sqla_queries')
-        return unicode(render(
-            dict(queries=data, tg=tg),
-            'genshi', 'tgext.debugbar.sections.templates.sqla'
-            ).split('\n', 1)[-1])
+        return data
+
+    def log_content(self):
+        data = self._gather_queries()
+        for query in data:
+            explain_link = tg.url('/_debugbar/perform_sql', qualified=True, params=dict(stmt=query['raw_sql'], params=query['params'], engine_id=query['engine_id'], duration=query['duration'], modify='explain'))
+            log.info('%s %s -> %s\n\t%s', request.path, query['params'], query['raw_sql'], explain_link)
+
+    def content(self):
+        data = self._gather_queries()
+        if not data:
+            return 'No queries in executed by the controller.'
+
+        return unicode(render(dict(queries=data, tg=tg),
+                              'genshi', 'tgext.debugbar.sections.templates.sqla').split('\n', 1)[-1])

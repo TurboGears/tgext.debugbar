@@ -77,44 +77,105 @@ class InventingDebugSection(DebugSection):
 
     js_reloadscript = '''
 <script>
-function tgext_debugbar_check_changed() {
-    DebugBarJQuery.ajax(window.location.href, {
-        'success': function(data, textStatus, jqXHR) {
-            var page_hash_re = /tgext_debugbar_page_hash="(.*)";/;
-            var page_hash = page_hash_re.exec(data);
-            if (page_hash && page_hash.length) {
-                var page_hash = page_hash[1];
-                if(page_hash != tgext_debugbar_page_hash) {
-                    window.location.reload();
-                    return
-                }
-            }
-            DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_error');
-            DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_warning');
-            tgext_debugbar_init_inventing();
-        },
-        'error':function(jqXHR, textStatus, errorThrown) {
-            DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_error');
-            DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_warning');
+; (function(win, undefined) {
+    var tgext_debugbar_inventing = win['tgext_debugbar_inventing'] = (win['tgext_debugbar_inventing'] || {});
 
-            if (jqXHR.status && jqXHR.status >= 500) {
-                DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').addClass('tgdb_barcontent_error');
-            }
-            else if (jqXHR.status && jqXHR.status < 500) {
-                //Probably not an error in this case, yet to decide if to alert it somehow
-            }
-            else {
-                DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').addClass('tgdb_barcontent_warning');
-            }
-            tgext_debugbar_init_inventing();
+    tgext_debugbar_inventing.start = function() {
+        if (!supportsLocalStorage()) {
+            alert("Inventing Mode requires local storage support");
+            return false;
         }
-    });
 
-}
+        localStorage["tgext.debugbar.enabled"] = "true";
+        DebugBarJQuery('#tgdb_debugbar_inventing_toggle').text('Turn Off');
+        tgext_debugbar_inventing.loop();
+    };
 
-function tgext_debugbar_init_inventing() {
-    setTimeout(tgext_debugbar_check_changed, 1000);
-}
+    tgext_debugbar_inventing.loop = function() {
+        if (!tgext_debugbar_inventing.is_enabled())
+            return;
+
+        setTimeout(tgext_debugbar_check_changed, 1000);
+    };
+
+    tgext_debugbar_inventing.is_enabled = function() {
+        if (!supportsLocalStorage())
+            return false;
+
+        var enabled = (localStorage["tgext.debugbar.enabled"] == "true");
+        return enabled;
+    }
+
+    tgext_debugbar_inventing.init = function(force) {
+        var enabled = (tgext_debugbar_inventing.is_enabled() || force);
+        if (!enabled)
+            return false;
+
+        tgext_debugbar_inventing.start();
+        return true;
+    };
+
+    tgext_debugbar_inventing.toggle = function(button) {
+        if (!supportsLocalStorage()) {
+            alert("Inventing Mode requires local storage support");
+            return false;
+        }
+
+        button = DebugBarJQuery(button);
+
+        var debugbar_enabled = tgext_debugbar_inventing.is_enabled();
+        if (!debugbar_enabled) {
+            tgext_debugbar_inventing.start();
+            button.text('Turn Off');
+        }
+        else {
+            localStorage["tgext.debugbar.enabled"] = "false";
+            button.text('Turn On');
+        }
+    };
+
+    function tgext_debugbar_check_changed() {
+        DebugBarJQuery.ajax(window.location.href, {
+            'success': function(data, textStatus, jqXHR) {
+                var page_hash_re = /tgext_debugbar_page_hash="(.*)";/;
+                var page_hash = page_hash_re.exec(data);
+                if (page_hash && page_hash.length) {
+                    var page_hash = page_hash[1];
+                    if(page_hash != tgext_debugbar_page_hash) {
+                        window.location.reload();
+                        return
+                    }
+                }
+                DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_error');
+                DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_warning');
+                tgext_debugbar_inventing.loop();
+            },
+            'error':function(jqXHR, textStatus, errorThrown) {
+                DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_error');
+                DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').removeClass('tgdb_barcontent_warning');
+
+                if (jqXHR.status && jqXHR.status >= 500) {
+                    DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').addClass('tgdb_barcontent_error');
+                }
+                else if (jqXHR.status && jqXHR.status < 500) {
+                    //Probably not an error in this case, yet to decide if to alert it somehow
+                }
+                else {
+                    DebugBarJQuery('#tgdb_debugbar #tgdb_barcontent').addClass('tgdb_barcontent_warning');
+                }
+                tgext_debugbar_inventing.loop();
+            }
+        });
+    }
+
+    function supportsLocalStorage() {
+      try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+      } catch(e){
+        return false;
+      }
+    }
+})(window);
 </script>'''
 
     def title(self):
@@ -125,10 +186,13 @@ function tgext_debugbar_init_inventing() {
         inventing_enabled = getattr(tmpl_context, 'debugbar_inventing', inventing_enabled)
 
         result = u''
+        result += render(dict(), 'genshi', 'tgext.debugbar.sections.templates.inventing')
+
         result += Markup(self.js_reloadscript)
         if inventing_enabled:
-            result += Markup('<script>tgext_debugbar_init_inventing()</script>')
-        result += render(dict(enabled=inventing_enabled),
-                         'genshi', 'tgext.debugbar.sections.templates.inventing')
+            result += Markup('<script>tgext_debugbar_inventing.init(true)</script>')
+        else:
+            result += Markup('<script>tgext_debugbar_inventing.init(false)</script>')
+
         return result
 

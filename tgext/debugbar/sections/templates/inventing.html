@@ -3,14 +3,6 @@
       py:strip="True">
 <h1>Inventing Mode</h1>
 <div id="tgdb_debugbar_inventing">
-    <div py:if="enabled">
-        Inventing mode is currently enabled
-    </div>
-    <div py:if="not enabled">
-        Inventing mode is <strong>currently disabled</strong><br/>
-        To permanently enable inventing mode when in debug add
-        <strong>debugbar.inventing=True</strong> option to your application configuration.
-    </div>
     <div>
         Invending mode permits to see on the fly the result of your
         changes by automatically reloading the web page whenever
@@ -22,11 +14,13 @@
         your browser and your test editor one near the other and
         enable inventing mode to start experimenting.
     </div>
-    <div py:if="not enabled">
-        <div class="tgdb_debugbar_button"
-             onclick="DebugBarJQuery(this).hide(); tgext_debugbar_init_inventing();">
-            Activate
-        </div>
+    <div id="tgdb_debugbar_inventing_toggle" class="tgdb_debugbar_button"
+         onclick="tgext_debugbar_inventing.toggle(this);">
+        Turn On
+    </div>
+    <div style="font-style: italic;margin-top: 10px;">
+        To permanently enable inventing mode when in debug add
+        <strong>debugbar.inventing=True</strong> option to your application configuration.
     </div>
 </div>
 </html>

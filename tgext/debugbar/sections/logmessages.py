@@ -50,7 +50,7 @@ class LoggingDebugSection(DebugSection):
         records = []
         for record in self.get_and_clear():
             records.append({
-                'message': record.getMessage(),
+                'message': record.getMessage().decode('utf-8', 'ignore'),
                 'time': datetime.datetime.fromtimestamp(record.created),
                 'level': record.levelname,
                 'file': format_fname(record.pathname),

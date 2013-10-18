@@ -18,7 +18,11 @@
 	<tbody>
 		<tr py:for="i, row in enumerate(result)"
 				class="${i%2 and 'tgdb_row_even' or 'tgdb_row_odd'} tgdb_row">
-			<td py:content="row" />
+			<td py:if="not isexplain" py:content="row" />
+            <py:if test="isexplain">
+                <td>${row}</td>
+                <td>${result[row]}</td>
+            </py:if>
 		</tr>
 	</tbody>
 </table>

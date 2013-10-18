@@ -72,7 +72,7 @@ class DebugBarController(TGController):
             title=title)
 
     @expose('genshi:tgext.debugbar.templates.perform_ming')
-    def perform_ming(self, collection, command, params, duration):
+    def perform_ming(self, collection, command, params, duration, modify=None):
         if not command.startswith('find'):
             raise HTTPBadRequest('Not a find statement')
 
@@ -89,9 +89,15 @@ class DebugBarController(TGController):
                 cmd = getattr(cursor, step)
                 cursor = cmd(*args)
 
+        isexplain = False
+        if modify and modify.lower() == 'explain':
+            cursor = cursor.ming_cursor.cursor.explain()
+            isexplain = True
+
         return dict(
             action=command,
             params=format_json(params),
             result=cursor,
             collection=collection,
-            duration=float(duration))
+            duration=float(duration),
+            isexplain=isexplain)

@@ -21,6 +21,9 @@
 				<p class="tgdb_query">
 					<a href="${tg.url('/_debugbar/perform_ming', params=dict(collection=query['collection'], command=query['command'], params=query['params'], duration=query['duration']))}">Results</a>
 				</p>
+                <p class="tgdb_query">
+					<a href="${tg.url('/_debugbar/perform_ming', params=dict(collection=query['collection'], command=query['command'], params=query['params'], duration=query['duration'], modify='explain'))}">Explain</a>
+				</p>
 			</td>
 		</tr>
 	</tbody>

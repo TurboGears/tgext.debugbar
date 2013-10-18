@@ -25,11 +25,9 @@ try:
     from sqlalchemy import event
     from sqlalchemy.engine.base import Engine
 
-    @event.listens_for(Engine, "before_cursor_execute")
     def _before_cursor_execute(conn, cursor, stmt, params, context, execmany):
         setattr(conn, 'tgdb_start_timer', time.time())
 
-    @event.listens_for(Engine, "after_cursor_execute")
     def _after_cursor_execute(conn, cursor, stmt, params, context, execmany):
         stop_timer = time.time()
         try:
@@ -58,9 +56,16 @@ except ImportError:
     has_sqla = False
 
 
+def enable_sqlalchemy(*args, **kw):
+    if has_sqla:
+        event.listen(Engine, "before_cursor_execute", _before_cursor_execute)
+        event.listen(Engine, "after_cursor_execute", _after_cursor_execute)
+
+
 class SQLADebugSection(DebugSection):
 
     name = 'SQLAlchemy'
+    hooks = dict(startup=[enable_sqlalchemy])
 
     @property
     def is_active(self):

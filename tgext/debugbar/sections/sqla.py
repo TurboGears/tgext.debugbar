@@ -4,13 +4,23 @@ import threading
 import time
 import weakref
 import logging
+import datetime
 
 try:
     import json
 except:
     import simplejson as json
 
+class ExtendedJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime.date, datetime.datetime)):
+            return str(obj)
+        else:
+            return JSONEncoder.default(self, obj)
+json_encoder = ExtendedJSONEncoder()
+
 import tg
+from tg import json_encode
 from tg import config, request, app_globals
 from tg.i18n import ugettext as _
 from tg.render import render
@@ -87,7 +97,7 @@ class SQLADebugSection(DebugSection):
             is_select = query['statement'].strip().lower().startswith('select')
             params = ''
             try:
-                params = json.dumps(query['parameters'])
+                params = json_encoder.encode(query['parameters'])
             except TypeError:
                 return 'Unable to serialize parameters of the query'
 
@@ -114,6 +124,9 @@ class SQLADebugSection(DebugSection):
         data = self._gather_queries()
         if not data:
             return 'No queries in executed by the controller.'
+
+        if isinstance(data, str):
+            return data
 
         return unicode(render(dict(queries=data, tg=tg),
                               'genshi', 'tgext.debugbar.sections.templates.sqla').split('\n', 1)[-1])

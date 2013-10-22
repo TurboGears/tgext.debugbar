@@ -20,7 +20,6 @@ class ExtendedJSONEncoder(json.JSONEncoder):
 json_encoder = ExtendedJSONEncoder()
 
 import tg
-from tg import json_encode
 from tg import config, request, app_globals
 from tg.i18n import ugettext as _
 from tg.render import render

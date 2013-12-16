@@ -39,7 +39,7 @@ class DebugBar():
                         try:
                             self.app_config.register_hook(hook_name, hook)
                         except:
-                            log.log(logging.WARN, 'Unable to register hook: %s' % hook_name)
+                            log.exception('Unable to register hook: %s', hook_name)
 
         self.app_config.register_hook('after_render', self.render_first)
 

@@ -24,8 +24,8 @@ except ImportError:
 
 try:
     import ming
-    import ming.orm
-    from ming.orm.ormsession import SessionExtension
+    import ming.odm
+    from ming.odm.ormsession import SessionExtension
 
     class TraceCursorExtension(SessionExtension):
 

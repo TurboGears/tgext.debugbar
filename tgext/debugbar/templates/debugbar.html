@@ -43,7 +43,7 @@ var DebugBarJQuery = $.noConflict(true);
 	<div id="tgdb_barcontent" style="display: none">
 		<div class="tgdb_section" py:for="sect in sections" py:if="sect.is_active">
 			<div class="tgdb_title" py:content="sect.title()" />
-			<div class="tgdb_content">
+			<div class="tgdb_content" style="overflow: auto !important;">
 				<div class="tgdb_content_box" py:content="Markup(sect.content())" />
 				<div class="tgdb_detail_box" />
 			</div>

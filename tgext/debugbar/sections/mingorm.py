@@ -35,7 +35,7 @@ try:
                 cursor.tgdb_class = inspect.isclass(
                     args[0]) and args[0].__name__ or args[0]
                 try:
-                    cursor.tgdb_args = [args[1]]
+                    cursor.tgdb_args = [[args[1], kw]]
                 except:
                     cursor.tgdb_args = [{}]
             elif action in ('limit', 'sort', 'skip', 'hint'):

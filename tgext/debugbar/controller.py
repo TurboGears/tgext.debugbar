@@ -83,7 +83,9 @@ class DebugBarController(TGController):
         for i, step in enumerate(command.split('.')):
             if step == 'find':
                 args = query_params[i]
-                cursor = session.find(collection, args)
+                query = args[0]
+                options = args[1]
+                cursor = session.find(collection, query, **options)
             else:
                 args = query_params[i]
                 cmd = getattr(cursor, step)

@@ -3,6 +3,7 @@ import logging
 from markupsafe import Markup
 
 from tg import config, request, url
+from tg import hooks as tg_hooks
 from tg.render import render
 
 from tgext.debugbar.sections import __sections__
@@ -37,21 +38,24 @@ class DebugBar():
                         hook()
                     else:
                         try:
-                            self.app_config.register_hook(hook_name, hook)
+                            if hook_name == 'controller_wrapper':
+                                tg_hooks.wrap_controller(hook)
+                            else:
+                                tg_hooks.register(hook_name, hook)
                         except:
                             log.exception('Unable to register hook: %s', hook_name)
 
-        self.app_config.register_hook('after_render', self.render_first)
+        tg_hooks.register('after_render', self.render_first)
 
     def render_first(self, response):
         try:
-            self.app_config.hooks['after_render'].remove(self.render_first)
+            tg_hooks.disconnect('after_render', self.render_first)
         except ValueError:
             pass  # pre-empted by another request
         else:
             from tgext.debugbar.controller import DebugBarController
             get_root_controller()._debugbar = DebugBarController()
-            self.app_config.register_hook('after_render', self.render_bars)
+            tg_hooks.register('after_render', self.render_bars)
         self.render_bars(response)
 
     def render_bars(self, response):
@@ -82,5 +86,4 @@ class DebugBar():
 
 
 def enable_debugbar(app_config):
-    app_config.register_hook('startup', DebugBar(app_config))
-
+    tg_hooks.register('startup', DebugBar(app_config))

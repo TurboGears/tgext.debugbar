@@ -3,8 +3,17 @@ import logging
 from markupsafe import Markup
 
 from tg import config, request, url
-from tg import hooks as tg_hooks
 from tg.render import render
+
+try:
+    # Verify that we have hooks with disconnect feature,
+    # which is only available since TG2.3.5, otherwise
+    # use app_config to register/disconnect hooks.
+    from tg import hooks as tg_hooks
+    if not hasattr(tg_hooks, 'disconnect'):
+        tg_hooks = None
+except ImportError:
+    tg_hooks = None
 
 from tgext.debugbar.sections import __sections__
 from tgext.debugbar.utils import get_root_controller
@@ -18,6 +27,21 @@ class DebugBar():
 
     def __init__(self, app_config):
         self.app_config = app_config
+
+    def _register_hook(self, hook_name, handler):
+        if tg_hooks is None:
+            self.app_config.register_hook(hook_name, handler)
+        else:
+            if hook_name == 'controller_wrapper':
+                tg_hooks.wrap_controller(handler)
+            else:
+                tg_hooks.register(hook_name, handler)
+
+    def _disconnect_hook(self, hook_name, handler):
+        if tg_hooks is None:
+            self.app_config.hooks[hook_name].remove(handler)
+        else:
+            tg_hooks.disconnect(hook_name, handler)
 
     def __call__(self):
         if not config.get('debug', False):
@@ -33,29 +57,26 @@ class DebugBar():
 
             log.log(logging.DEBUG, 'Enabling Section: %s' % sec.name)
             for hook_name, hooks in sec.hooks.iteritems():
-                for hook in hooks:
+                for handler in hooks:
                     if hook_name == 'startup':
-                        hook()
+                        handler()
                     else:
                         try:
-                            if hook_name == 'controller_wrapper':
-                                tg_hooks.wrap_controller(hook)
-                            else:
-                                tg_hooks.register(hook_name, hook)
+                            self._register_hook(hook_name, handler)
                         except:
                             log.exception('Unable to register hook: %s', hook_name)
 
-        tg_hooks.register('after_render', self.render_first)
+        self._register_hook('after_render', self.render_first)
 
     def render_first(self, response):
         try:
-            tg_hooks.disconnect('after_render', self.render_first)
+            self._disconnect_hook('after_render', self.render_first)
         except ValueError:
-            pass  # pre-empted by another request
+            pass  # pre-emptied by another request
         else:
             from tgext.debugbar.controller import DebugBarController
             get_root_controller()._debugbar = DebugBarController()
-            tg_hooks.register('after_render', self.render_bars)
+            self._register_hook('after_render', self.render_bars)
         self.render_bars(response)
 
     def render_bars(self, response):
@@ -86,4 +107,7 @@ class DebugBar():
 
 
 def enable_debugbar(app_config):
-    tg_hooks.register('startup', DebugBar(app_config))
+    if tg_hooks is None:
+        app_config.register_hook('startup', DebugBar(app_config))
+    else:
+        tg_hooks.register('startup', DebugBar(app_config))

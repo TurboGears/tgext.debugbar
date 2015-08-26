@@ -6,7 +6,7 @@ try:
 except:
     import simplejson as json
 
-from tg import app_globals, config, expose
+from tg import app_globals, config, expose, request
 from tg.controllers import TGController, WSGIAppController
 from webob.exc import HTTPBadRequest
 from utils import format_sql, format_json
@@ -29,11 +29,17 @@ except ImportError:
     except ImportError:
         pass
 
+
 class StaticsController(TGController):
+    _directory_app = DirectoryApp(statics_path)
 
     @expose()
-    def _lookup(self, *args):
-        return WSGIAppController(DirectoryApp(statics_path)), args
+    def _default(self, *args):
+        new_req = request.copy()
+        to_pop = len(new_req.path_info.strip('/').split('/')) - len(args)
+        for i in range(to_pop):
+            new_req.path_info_pop()
+        return new_req.get_response(self._directory_app)
 
 
 class DebugBarController(TGController):

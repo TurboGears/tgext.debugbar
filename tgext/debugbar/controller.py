@@ -1,5 +1,6 @@
 import sys
 import os
+import pprint
 
 try:
     import json
@@ -103,6 +104,7 @@ class DebugBarController(TGController):
             isexplain = True
 
         return dict(
+            pformat=pprint.pformat,
             action=command,
             params=format_json(params),
             result=cursor,

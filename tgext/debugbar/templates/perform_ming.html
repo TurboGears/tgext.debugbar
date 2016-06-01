@@ -21,7 +21,7 @@
 			<td py:if="not isexplain" py:content="row" />
             <py:if test="isexplain">
                 <td>${row}</td>
-                <td>${result[row]}</td>
+                <td><pre>${pformat(result[row])}</pre></td>
             </py:if>
 		</tr>
 	</tbody>

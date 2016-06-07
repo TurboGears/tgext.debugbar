@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.2.5'
+version = '0.3.0'
 
 here = os.path.abspath(os.path.dirname(__file__))
 try:
@@ -29,9 +29,8 @@ setup(name='tgext.debugbar',
       package_data = {'': ['*.html', '*.js', '*.css', '*.png', '*.gif']},
       zip_safe=False,
       install_requires=[
-        "TurboGears2 >= 2.2.0",
-        "Pygments",
-        "Genshi"
+        "TurboGears2 >= 2.3.9",
+        "Pygments"
       ],
       entry_points="""
       # -*- Entry points: -*-

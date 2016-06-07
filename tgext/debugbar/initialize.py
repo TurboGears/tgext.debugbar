@@ -20,13 +20,15 @@ from tgext.debugbar.utils import get_root_controller
 
 log = logging.getLogger('tgext.debugbar')
 
+
 class DebugBar():
     css_link = u'<link rel="stylesheet" type="text/css" href="%s" />'
     css_path = '/_debugbar/statics/style.css'
-    template = 'tgext.debugbar.templates.debugbar'
+    template = 'tgext.debugbar.templates.debugbar!html'
 
     def __init__(self, app_config):
         self.app_config = app_config
+        self.available_engines = None
 
     def _register_hook(self, hook_name, handler):
         if tg_hooks is None:
@@ -47,8 +49,16 @@ class DebugBar():
         if not config.get('debug', False):
             return
 
-        if 'genshi' not in self.app_config.renderers:
-            self.app_config.renderers.append('genshi')
+        config['debugbar.engine'] = next(
+            iter(sorted(set(('genshi', 'kajiki')) & set(self.app_config['renderers']),
+                        key=lambda x: x == self.app_config['default_renderer'],
+                        reverse=True)),
+            None
+        )
+        if not config['debugbar.engine']:
+            log.error("Genshi or Kajiki rendering engines unavailable. Please install kajiki "
+                      "and add base_config.renderers.append('kajiki') to your app_cfg.py")
+            raise RuntimeError('Debugbar requires Genshi or Kajiki rendering engines')
 
         log.log(logging.INFO, 'Enabling Debug Toolbar')
         for sec in __sections__:
@@ -102,7 +112,7 @@ class DebugBar():
                     Markup(self.css_link % url(self.css_path)),
                     page[pos_head:pos_body],
                     Markup(render(dict(sections=__sections__),
-                        'genshi', self.template,).split('\n', 1)[-1]),
+                                  config['debugbar.engine'], self.template,).split('\n', 1)[-1]),
                     page[pos_body:]])
 
 

@@ -124,5 +124,5 @@ class MingDebugSection(DebugSection):
         delattr(request, 'tgdb_ming_cursors')
         return unicode(render(
             dict(queries=data, tg=tg),
-            'genshi', 'tgext.debugbar.sections.templates.ming'
+            config['debugbar.engine'], 'tgext.debugbar.sections.templates.ming!html'
             ).split('\n', 1)[-1])

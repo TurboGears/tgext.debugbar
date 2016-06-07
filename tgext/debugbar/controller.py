@@ -46,7 +46,8 @@ class StaticsController(TGController):
 class DebugBarController(TGController):
     statics = StaticsController()
 
-    @expose('genshi:tgext.debugbar.templates.perform_sql')
+    @expose('genshi:tgext.debugbar.templates.perform_sql!html')
+    @expose('kajiki:tgext.debugbar.templates.perform_sql!html')
     def perform_sql(self, stmt, params, engine_id, duration, modify=None):
         # Make sure it is a select statement
         if not stmt.lower().lstrip().startswith('select'):
@@ -78,7 +79,8 @@ class DebugBarController(TGController):
             duration=float(duration),
             title=title)
 
-    @expose('genshi:tgext.debugbar.templates.perform_ming')
+    @expose('genshi:tgext.debugbar.templates.perform_ming!html')
+    @expose('kajiki:tgext.debugbar.templates.perform_ming!html')
     def perform_ming(self, collection, command, params, duration, modify=None):
         if not command.startswith('find'):
             raise HTTPBadRequest('Not a find statement')

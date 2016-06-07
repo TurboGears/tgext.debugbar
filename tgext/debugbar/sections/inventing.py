@@ -186,7 +186,8 @@ class InventingDebugSection(DebugSection):
         inventing_enabled = getattr(tmpl_context, 'debugbar_inventing', inventing_enabled)
 
         result = u''
-        result += render(dict(), 'genshi', 'tgext.debugbar.sections.templates.inventing')
+        result += render(dict(), config['debugbar.engine'],
+                         'tgext.debugbar.sections.templates.inventing!html')
 
         result += Markup(self.js_reloadscript)
         if inventing_enabled:

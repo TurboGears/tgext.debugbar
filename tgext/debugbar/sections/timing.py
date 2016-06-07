@@ -1,6 +1,6 @@
 import time, threading
 
-from tg import request
+from tg import request, config
 from tg.i18n import ugettext as _
 from tg.render import render
 
@@ -148,7 +148,7 @@ class TimingDebugSection(DebugSection):
                     vars={'Total Time': request.tgdb_total_time,
                         'Controller Time': request.tgdb_call_time,
                         'Render Time': request.tgdb_render_time}),
-                'genshi', 'tgext.debugbar.sections.templates.timing'
+                config['debugbar.engine'], 'tgext.debugbar.sections.templates.timing!html'
                 ).split('\n', 1)[-1])
         finally:
             delattr(request, 'tgdb_render_info')

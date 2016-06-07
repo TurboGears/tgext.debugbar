@@ -128,4 +128,5 @@ class SQLADebugSection(DebugSection):
             return data
 
         return unicode(render(dict(queries=data, tg=tg),
-                              'genshi', 'tgext.debugbar.sections.templates.sqla').split('\n', 1)[-1])
+                              config['debugbar.engine'],
+                              'tgext.debugbar.sections.templates.sqla!html').split('\n', 1)[-1])

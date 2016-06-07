@@ -60,5 +60,5 @@ class RequestDebugSection(DebugSection):
 
         return unicode(render(
             dict(vars=vars),
-            'genshi', 'tgext.debugbar.sections.templates.request'
+            tg.config['debugbar.engine'], 'tgext.debugbar.sections.templates.request!html'
             ).split('\n', 1)[-1])

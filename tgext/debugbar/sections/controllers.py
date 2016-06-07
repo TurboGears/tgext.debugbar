@@ -1,5 +1,6 @@
 import inspect
 
+import tg
 from tg.controllers.decoratedcontroller import DecoratedController
 from tg.i18n import ugettext as _
 from tg.render import render
@@ -44,5 +45,5 @@ class ControllersDebugSection(DebugSection):
         map_controllers('', get_root_controller(), controllers)
         return unicode(render(
             dict(controllers=controllers),
-            'genshi', 'tgext.debugbar.sections.templates.controllers'
+            tg.config['debugbar.engine'], 'tgext.debugbar.sections.templates.controllers!html'
             ).split('\n', 1)[-1])

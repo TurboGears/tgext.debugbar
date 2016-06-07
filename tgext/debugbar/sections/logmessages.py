@@ -2,6 +2,7 @@ import datetime
 import logging
 import threading
 
+import tg
 from tg.i18n import ugettext as _
 from tg.render import render
 
@@ -61,5 +62,5 @@ class LoggingDebugSection(DebugSection):
         records = reversed(records)
         return unicode(render(
             dict(records=records),
-            'genshi', 'tgext.debugbar.sections.templates.logging'
+            tg.config['debugbar.engine'], 'tgext.debugbar.sections.templates.logging!html'
             ).split('\n', 1)[-1])

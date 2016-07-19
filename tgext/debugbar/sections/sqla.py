@@ -16,7 +16,7 @@ class ExtendedJSONEncoder(json.JSONEncoder):
         if isinstance(obj, (datetime.date, datetime.datetime)):
             return str(obj)
         else:
-            return JSONEncoder.default(self, obj)
+            return json.JSONEncoder.default(self, obj)
 json_encoder = ExtendedJSONEncoder()
 
 import tg

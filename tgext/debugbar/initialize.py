@@ -3,6 +3,7 @@ import logging
 from markupsafe import Markup
 
 from tg import config, request, url
+from tg._compat import unicode_text
 from tg.render import render
 
 try:
@@ -66,7 +67,7 @@ class DebugBar():
                 continue
 
             log.log(logging.DEBUG, 'Enabling Section: %s' % sec.name)
-            for hook_name, hooks in sec.hooks.iteritems():
+            for hook_name, hooks in sec.hooks.items():
                 for handler in hooks:
                     if hook_name == 'startup':
                         handler()
@@ -91,7 +92,7 @@ class DebugBar():
 
     def render_bars(self, response):
         page = response.get('response')
-        if (not page or not isinstance(page, unicode)
+        if (not page or not isinstance(page, unicode_text)
                 or 'text/html' not in response['content_type']
                 or request.headers.get(
                     'X-Requested-With') == 'XMLHttpRequest'):

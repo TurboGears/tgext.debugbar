@@ -48,7 +48,7 @@ def format_sql(query):
     return highlight(
         query,
         SqlLexer(encoding='utf-8'),
-        HtmlFormatter(encoding='utf-8', noclasses=True, style=SQL_STYLE))
+        HtmlFormatter(encoding='utf-8', noclasses=True, style=SQL_STYLE)).decode('utf-8')
 
 
 def format_json(json):
@@ -59,7 +59,7 @@ def format_json(json):
     return highlight(
         json,
         MongoLexer(encoding='utf-8'),
-        HtmlFormatter(encoding='utf-8', noclasses=True, style=JSON_STYLE))
+        HtmlFormatter(encoding='utf-8', noclasses=True, style=JSON_STYLE)).decode('utf-8')
 
 
 def common_segment_count(path, value):

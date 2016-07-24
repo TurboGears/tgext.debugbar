@@ -1,6 +1,8 @@
 import time
 import inspect
 
+from tg._compat import unicode_text
+
 try:
     import json
 except:
@@ -122,7 +124,7 @@ class MingDebugSection(DebugSection):
             })
 
         delattr(request, 'tgdb_ming_cursors')
-        return unicode(render(
+        return unicode_text(render(
             dict(queries=data, tg=tg),
             config['debugbar.engine'], 'tgext.debugbar.sections.templates.ming!html'
             ).split('\n', 1)[-1])

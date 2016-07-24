@@ -8,7 +8,7 @@
 		<th>Action</th>
 		<th>Time Spent</th>
 	</tr>
-	<tr py:for="i, entry in enumerate(vars.iteritems())"
+	<tr py:for="i, entry in enumerate(vars.items())"
 			class="${'tgdb_row_even' if i%2 else 'tgdb_row_odd'} tgdb_row">
 		<td><strong py:content="entry[0]" /></td>
 		<td py:content="u'%.4f\xa0ms' % entry[1]" />

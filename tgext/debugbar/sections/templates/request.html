@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:py="http://genshi.edgewall.org/"
 	py:strip="True">
-<div py:for="title, entries in vars.iteritems()">
+<div py:for="title, entries in vars.items()">
 	<h1 py:content="title" />
 	<p py:if="not entries">Nothing here.</p>
 	<table class="tgdb_table" py:if="entries">

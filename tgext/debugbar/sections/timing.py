@@ -1,6 +1,7 @@
 import time, threading
 
 from tg import request, config
+from tg._compat import unicode_text
 from tg.i18n import ugettext as _
 from tg.render import render
 
@@ -140,7 +141,7 @@ class TimingDebugSection(DebugSection):
 
     def content(self):
         try:
-            return unicode(render(dict(
+            return unicode_text(render(dict(
                     render_info=request.tgdb_render_info,
                     stats=request.tgdb_profiling_stats,
                     function_calls=request.tgdb_profiling_function_calls,

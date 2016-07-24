@@ -1,6 +1,7 @@
 from pprint import saferepr
 
 import tg
+from tg._compat import unicode_text
 from tg.i18n import ugettext as _
 from tg.render import render
 
@@ -41,7 +42,7 @@ class RequestDebugSection(DebugSection):
         attr_dict = request.environ.get('webob.adhoc_attrs', {}).copy()
         attr_dict['response'] = repr(response.__dict__)
 
-        for entry in attr_dict.keys():
+        for entry in list(attr_dict.keys()):
             if entry.startswith('tgdb_'):
                 del attr_dict[entry]
 
@@ -51,14 +52,14 @@ class RequestDebugSection(DebugSection):
         vars['Cookies'] = [(k, request.cookies.get(k))
             for k in request.cookies]
         vars['Headers'] = [(k, saferepr(v))
-            for k, v in request.environ.iteritems()
+            for k, v in request.environ.items()
             if k.startswith('HTTP_') or k in request_header_filter]
         vars['Request Attributes'] = [(k, saferepr(v))
-            for k, v in attr_dict.iteritems() if not callable(v)]
+            for k, v in attr_dict.items() if not callable(v)]
         vars['Environ'] = [(k, saferepr(v))
-            for k, v in request.environ.iteritems()]
+            for k, v in request.environ.items()]
 
-        return unicode(render(
+        return unicode_text(render(
             dict(vars=vars),
             tg.config['debugbar.engine'], 'tgext.debugbar.sections.templates.request!html'
             ).split('\n', 1)[-1])

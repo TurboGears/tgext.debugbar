@@ -3,6 +3,7 @@ import logging
 import threading
 
 import tg
+from tg._compat import unicode_text
 from tg.i18n import ugettext as _
 from tg.render import render
 
@@ -50,8 +51,11 @@ class LoggingDebugSection(DebugSection):
     def content(self):
         records = []
         for record in self.get_and_clear():
+            msg = record.getMessage()
+            if isinstance(msg, bytes):
+                msg = msg.decode('utf-8', 'ignore')
             records.append({
-                'message': record.getMessage().decode('utf-8', 'ignore'),
+                'message': msg,
                 'time': datetime.datetime.fromtimestamp(record.created),
                 'level': record.levelname,
                 'file': format_fname(record.pathname),
@@ -60,7 +64,7 @@ class LoggingDebugSection(DebugSection):
             })
 
         records = reversed(records)
-        return unicode(render(
+        return unicode_text(render(
             dict(records=records),
             tg.config['debugbar.engine'], 'tgext.debugbar.sections.templates.logging!html'
             ).split('\n', 1)[-1])

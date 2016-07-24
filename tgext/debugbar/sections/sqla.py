@@ -6,6 +6,8 @@ import weakref
 import logging
 import datetime
 
+from tg._compat import unicode_text
+
 try:
     import json
 except:
@@ -127,6 +129,6 @@ class SQLADebugSection(DebugSection):
         if isinstance(data, str):
             return data
 
-        return unicode(render(dict(queries=data, tg=tg),
+        return unicode_text(render(dict(queries=data, tg=tg),
                               config['debugbar.engine'],
                               'tgext.debugbar.sections.templates.sqla!html').split('\n', 1)[-1])

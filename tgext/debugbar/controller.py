@@ -10,11 +10,10 @@ except:
 from tg import app_globals, config, expose, request
 from tg.controllers import TGController, WSGIAppController
 from webob.exc import HTTPBadRequest
-from utils import format_sql, format_json
-from sections import __sections__
+from .utils import format_sql, format_json
+from .sections import __sections__
 
-statics_path = os.path.join(
-    os.path.split(sys.modules['tgext.debugbar'].__file__)[0], 'statics')
+STATICS_PATH = os.path.join(os.path.split(sys.modules['tgext.debugbar'].__file__)[0], 'statics')
 
 
 try:
@@ -32,7 +31,7 @@ except ImportError:
 
 
 class StaticsController(TGController):
-    _directory_app = DirectoryApp(statics_path)
+    _directory_app = DirectoryApp(STATICS_PATH)
 
     @expose()
     def _default(self, *args):

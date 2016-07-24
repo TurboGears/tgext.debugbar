@@ -1,6 +1,7 @@
 import hashlib, re, logging, os, time
 from datetime import datetime
 
+from tg._compat import unicode_text
 from tg import config, tmpl_context
 from tg.render import render
 from tg.i18n import ugettext as _
@@ -45,7 +46,7 @@ def on_after_render(response, *args, **kw):
     template = response.get('template_name')
     page = response.get('response')
 
-    if content_type and 'text/html' in content_type and template and isinstance(page, unicode):
+    if content_type and 'text/html' in content_type and template and isinstance(page, unicode_text):
         m = hashlib.md5()
         m.update(page.encode('utf-8'))
         m = m.hexdigest() + _reload_datetime

@@ -1,4 +1,5 @@
-from initialize import DebugBar, enable_debugbar
+from .initialize import DebugBar, enable_debugbar
+
 
 def plugme(app_config, options):
     app_config['debugbar.inventing'] = options.get('inventing', False)

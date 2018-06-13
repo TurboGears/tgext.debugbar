@@ -67,7 +67,7 @@ def on_after_render_call(template_engine, template_name, template_vars, kwargs):
     template_info['time'] += (now - req.tgdb_render_call_start_time) * 1000
     template_info['count'] += 1
 
-def profile_wrapper(decoration, controller):
+def profile_wrapper(controller):
 
     def wrapped_controller(*args, **kw):
         profiler = profile.Profile()

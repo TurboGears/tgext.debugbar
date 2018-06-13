@@ -33,10 +33,24 @@ class DebugBar():
 
     def _register_hook(self, hook_name, handler):
         if tg_hooks is None:
+            # 2.1+
             self.app_config.register_hook(hook_name, handler)
-        else:
+        elif hasattr(tg_hooks, 'wrap_controller'):
+            # 2.3+
             if hook_name == 'controller_wrapper':
-                tg_hooks.wrap_controller(handler)
+                def _accept_decoration(decoration, controller):
+                    return handler(controller)
+                tg_hooks.wrap_controller(_accept_decoration)
+            else:
+                tg_hooks.register(hook_name, handler)
+        else:
+            # 2.4+
+            if hook_name == 'controller_wrapper':
+                from tg import ApplicationConfigurator
+                dispatch = ApplicationConfigurator.current().get_component('dispatch')
+                if dispatch is None:
+                    raise RuntimeError('TurboGears application configured without dispatching')
+                dispatch.register_controller_wrapper(handler)
             else:
                 tg_hooks.register(hook_name, handler)
 

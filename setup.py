@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.4.0'
+version = '0.5.0'
 
 here = os.path.abspath(os.path.dirname(__file__))
 try:
@@ -20,7 +20,7 @@ setup(name='tgext.debugbar',
         ],
       keywords='turbogears2.widgets',
       author='Alessandro Molina',
-      author_email='alessandro.molina@axant.it',
+      author_email='amol@turbogears.org',
       url='https://pypi.python.org/pypi/tgext.debugbar',
       license='MIT',
       packages=find_packages(exclude=['ez_setup']),

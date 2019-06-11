@@ -2,7 +2,8 @@ import logging
 
 from markupsafe import Markup
 
-from tg import config, request, url
+import tg
+from tg import request, url
 from tg._compat import unicode_text
 from tg.render import render
 
@@ -15,6 +16,13 @@ try:
         tg_hooks = None
 except ImportError:
     tg_hooks = None
+
+try:
+    # TG >= 2.4
+    from tg import ApplicationConfigurator
+except ImportError:
+    # TG < 2.4
+    class ApplicationConfigurator: pass
 
 from tgext.debugbar.sections import __sections__
 from tgext.debugbar.utils import get_root_controller
@@ -60,17 +68,20 @@ class DebugBar():
         else:
             tg_hooks.disconnect(hook_name, handler)
 
-    def __call__(self):
-        if not config.get('debug', False):
+    def __call__(self, configurator=None, conf=None):
+        if conf is None:
+            conf = tg.config
+        
+        if not conf.get('debug', False):
             return
 
-        config['debugbar.engine'] = next(
-            iter(sorted(set(('genshi', 'kajiki')) & set(self.app_config['renderers']),
-                        key=lambda x: x == self.app_config['default_renderer'],
+        conf['debugbar.engine'] = next(
+            iter(sorted(set(('genshi', 'kajiki')) & set(conf['renderers']),
+                        key=lambda x: x == conf['default_renderer'],
                         reverse=True)),
             None
         )
-        if not config['debugbar.engine']:
+        if not conf['debugbar.engine']:
             log.error("Genshi or Kajiki rendering engines unavailable. Please install kajiki "
                       "and add base_config.renderers.append('kajiki') to your app_cfg.py")
             raise RuntimeError('Debugbar requires Genshi or Kajiki rendering engines')
@@ -111,7 +122,7 @@ class DebugBar():
                 or request.headers.get(
                     'X-Requested-With') == 'XMLHttpRequest'):
 
-            if config.get('debugbar.enable_logs', False):
+            if tg.config.get('debugbar.enable_logs', False):
                 for section in __sections__:
                     if hasattr(section, 'log_content'):
                         section.log_content()
@@ -127,12 +138,15 @@ class DebugBar():
                     Markup(self.css_link % url(self.css_path)),
                     page[pos_head:pos_body],
                     Markup(render(dict(sections=__sections__),
-                                  config['debugbar.engine'], self.template,).split('\n', 1)[-1]),
+                                  tg.config['debugbar.engine'], self.template,).split('\n', 1)[-1]),
                     page[pos_body:]])
 
 
 def enable_debugbar(app_config):
-    if tg_hooks is None:
-        app_config.register_hook('startup', DebugBar(app_config))
+    if isinstance(app_config, ApplicationConfigurator):
+        tg_hooks.register('initialized_config', DebugBar(app_config))
     else:
-        tg_hooks.register('startup', DebugBar(app_config))
+        if tg_hooks is None:
+            app_config.register_hook('startup', DebugBar(app_config))
+        else:
+            tg_hooks.register('startup', DebugBar(app_config))

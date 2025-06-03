@@ -28,6 +28,7 @@ setup(name='tgext.debugbar',
       include_package_data=True,
       package_data = {'': ['*.html', '*.js', '*.css', '*.png', '*.gif']},
       zip_safe=False,
+      python_requires='>=3.8',
       install_requires=[
         "TurboGears2 >= 2.3.9",
         "Pygments"

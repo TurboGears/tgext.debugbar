@@ -3,7 +3,6 @@ import logging
 import threading
 
 import tg
-from tg._compat import unicode_text
 from tg.i18n import ugettext as _
 from tg.render import render
 
@@ -64,7 +63,7 @@ class LoggingDebugSection(DebugSection):
             })
 
         records = reversed(records)
-        return unicode_text(render(
+        return str(render(
             dict(records=records),
             tg.config['debugbar.engine'], 'tgext.debugbar.sections.templates.logging!html'
             ).split('\n', 1)[-1])

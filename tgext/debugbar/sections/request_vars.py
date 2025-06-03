@@ -1,7 +1,6 @@
 from pprint import saferepr
 
 import tg
-from tg._compat import unicode_text
 from tg.i18n import ugettext as _
 from tg.render import render
 
@@ -59,7 +58,7 @@ class RequestDebugSection(DebugSection):
         vars['Environ'] = [(k, saferepr(v))
             for k, v in request.environ.items()]
 
-        return unicode_text(render(
+        return str(render(
             dict(vars=vars),
             tg.config['debugbar.engine'], 'tgext.debugbar.sections.templates.request!html'
             ).split('\n', 1)[-1])

@@ -4,7 +4,6 @@ from markupsafe import Markup
 
 import tg
 from tg import request, url
-from tg._compat import unicode_text
 from tg.render import render
 
 try:
@@ -117,7 +116,7 @@ class DebugBar():
 
     def render_bars(self, response):
         page = response.get('response')
-        if (not page or not isinstance(page, unicode_text)
+        if (not page or not isinstance(page, str)
                 or 'text/html' not in response['content_type']
                 or request.headers.get(
                     'X-Requested-With') == 'XMLHttpRequest'):

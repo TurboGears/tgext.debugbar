@@ -1,7 +1,6 @@
 import inspect
 
 import tg
-from tg._compat import unicode_text
 from tg.controllers.decoratedcontroller import DecoratedController
 from tg.i18n import ugettext as _
 from tg.render import render
@@ -44,7 +43,7 @@ class ControllersDebugSection(DebugSection):
     def content(self):
         controllers = odict()
         map_controllers('', get_root_controller(), controllers)
-        return unicode_text(render(
+        return str(render(
             dict(controllers=controllers),
             tg.config['debugbar.engine'], 'tgext.debugbar.sections.templates.controllers!html'
             ).split('\n', 1)[-1])

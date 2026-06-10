@@ -1,10 +1,6 @@
 import time
 import inspect
-
-try:
-    import json
-except:
-    import simplejson as json
+import json
 
 import tg
 from tg import config, request

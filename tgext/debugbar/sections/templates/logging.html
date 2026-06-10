@@ -14,8 +14,8 @@
 		<td><strong py:content="record['level']" /></td>
 		<td py:content="record['time']" />
 		<td py:content="record['message']" />
-		<td title="${u'%s:%s' % (record['file_long'], record['line'])}"
-			py:content="u'%s:%s' % (record['file'], record['line'])" />
+		<td title="${'%s:%s' % (record['file_long'], record['line'])}"
+			py:content="'%s:%s' % (record['file'], record['line'])" />
 	</tr>
 </table>
 </html>

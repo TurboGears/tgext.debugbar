@@ -1,15 +1,9 @@
-from __future__ import with_statement
-
 import threading
 import time
 import weakref
 import logging
 import datetime
-
-try:
-    import json
-except:
-    import simplejson as json
+import json
 
 class ExtendedJSONEncoder(json.JSONEncoder):
     def default(self, obj):

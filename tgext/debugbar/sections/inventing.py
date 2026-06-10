@@ -184,7 +184,7 @@ class InventingDebugSection(DebugSection):
         inventing_enabled = asbool(config.get('debugbar.inventing', 'false'))
         inventing_enabled = getattr(tmpl_context, 'debugbar_inventing', inventing_enabled)
 
-        result = u''
+        result = ''
         result += render(dict(), config['debugbar.engine'],
                          'tgext.debugbar.sections.templates.inventing!html')
 

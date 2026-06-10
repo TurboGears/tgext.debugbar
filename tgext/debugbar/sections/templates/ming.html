@@ -16,7 +16,7 @@
 				class="${'tgdb_row_odd' if i%2 else 'tgdb_row_even'} tgdb_row">
 			<td><strong py:content="Markup(query['collection'])" />.<em py:content="Markup(query['command'])" /></td>
 			<td py:content="Markup(query['filter'])" />
-			<td py:content="u'%.4f\xa0ms' % query['duration']" />
+			<td py:content="'%.4f\xa0ms' % query['duration']" />
 			<td>
 				<p class="tgdb_query">
 					<a href="${tg.url('/_debugbar/perform_ming', params=dict(collection=query['collection'], command=query['command'], params=query['params'], duration=query['duration']))}">Results</a>

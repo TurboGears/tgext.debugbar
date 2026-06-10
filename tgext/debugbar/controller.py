@@ -1,11 +1,7 @@
 import sys
 import os
 import pprint
-
-try:
-    import json
-except:
-    import simplejson as json
+import json
 
 from tg import app_globals, config, expose, request
 from tg.controllers import TGController, WSGIAppController
@@ -68,13 +64,20 @@ class DebugBarController(TGController):
         else:
             title = 'Query Results'
 
-        result = engine.execute(stmt, json.loads(params))
+        sql_params = json.loads(params)
+        if isinstance(sql_params, list):
+            sql_params = tuple(sql_params)
+
+        with engine.connect() as connection:
+            result = connection.exec_driver_sql(stmt, sql_params)
+            rows = result.fetchall()
+            headers = result.keys()
 
         return dict(
             sql=format_sql(stmt),
             params=params,
-            result=result.fetchall(),
-            headers=result.keys(),
+            result=rows,
+            headers=headers,
             duration=float(duration),
             title=title)
 

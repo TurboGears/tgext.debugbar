@@ -20,14 +20,14 @@ class ThreadTrackingHandler(logging.Handler):
 
     def get_records(self, thread=None):
         if thread is None:
-            thread = threading.currentThread()
+            thread = threading.current_thread()
         if thread not in self.records:
             self.records[thread] = []
         return self.records[thread]
 
     def clear_records(self, thread=None):
         if thread is None:
-            thread = threading.currentThread()
+            thread = threading.current_thread()
         if thread in self.records:
             del self.records[thread]
 

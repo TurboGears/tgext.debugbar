@@ -30,7 +30,7 @@ log = logging.getLogger('tgext.debugbar')
 
 
 class DebugBar():
-    css_link = u'<link rel="stylesheet" type="text/css" href="%s" />'
+    css_link = '<link rel="stylesheet" type="text/css" href="%s" />'
     css_path = '/_debugbar/statics/style.css'
     template = 'tgext.debugbar.templates.debugbar!html'
 

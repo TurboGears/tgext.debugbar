@@ -16,7 +16,9 @@ setup(name='tgext.debugbar',
       classifiers=[
         "Environment :: Web Environment",
         "Topic :: Software Development :: Libraries :: Python Modules",
-        "Framework :: TurboGears"
+        "Framework :: TurboGears",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3 :: Only"
         ],
       keywords='turbogears2.widgets',
       author='Alessandro Molina',

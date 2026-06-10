@@ -15,7 +15,7 @@
 		<tr py:for="query in queries" class="tgdb_row">
 			<td py:content="Markup(query['sql'])" />
 			<td py:content="Markup(query['params'])" />
-			<td py:content="u'%.4f\xa0ms' % query['duration']" />
+			<td py:content="'%.4f\xa0ms' % query['duration']" />
 			<td>
 				<div py:if="query['is_select']">
 					<p class="tgdb_query">

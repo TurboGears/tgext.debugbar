@@ -29,7 +29,7 @@ try:
     from sqlalchemy.engine.base import Engine
 
     def _before_cursor_execute(conn, cursor, stmt, params, context, execmany):
-        setattr(conn, 'tgdb_start_timer', time.time())
+        setattr(context, 'tgdb_start_timer', time.time())
 
     def _after_cursor_execute(conn, cursor, stmt, params, context, execmany):
         stop_timer = time.time()
@@ -38,6 +38,7 @@ try:
         except:
             req = None
 
+        start_timer = getattr(context, 'tgdb_start_timer', stop_timer)
         if req is not None:
             with lock:
                 engines = getattr(app_globals, 'tgdb_sqla_engines', {})
@@ -46,13 +47,14 @@ try:
                 queries = getattr(req, 'tgdb_sqla_queries', [])
                 queries.append({
                     'engine_id': id(conn.engine),
-                    'duration': (stop_timer - conn.tgdb_start_timer) * 1000,
+                    'duration': (stop_timer - start_timer) * 1000,
                     'statement': stmt,
                     'parameters': params,
                     'context': context
                 })
                 req.tgdb_sqla_queries = queries
-        delattr(conn, 'tgdb_start_timer')
+        if hasattr(context, 'tgdb_start_timer'):
+            delattr(context, 'tgdb_start_timer')
 
     has_sqla = True
 except ImportError:
